@@ -8,18 +8,24 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.fridgebuddy.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="Fridge Buddy"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.fridgebuddy.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:name="com.example.fridgebuddy.ui.Inventory.InventoryFragment"
+        android:label="Inventory"
+        tools:layout="@layout/fragment_inventory" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.fridgebuddy.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:name="com.example.fridgebuddy.ui.ScanBarcode.ScanBarcodeFragment"
+        android:label="Scan Barcode"
+        tools:layout="@layout/fragment_scanbarcode" />
+
+    <fragment
+        android:id="@+id/navigation_ShoppingList"
+        android:name="com.example.fridgebuddy.ui.ShoppingList.ShoppingListFragment"
+        android:label="Shopping List"
+        tools:layout="@layout/fragment_shoppinglist" />
 </navigation>

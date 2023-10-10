@@ -3,4 +3,18 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="my_fridge">My Fridge</string>
+    <string name="fridge_buddy">Fridge Buddy</string>
+    <string name="inventory">Inventory</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="todo">TODO</string>
+    <string name="calendar">Calendar</string>
+    <string name="fridge_inventory">Fridge Inventory</string>
+    <string name="button">Button</string>
+    <string name="scan_now"><![CDATA[Scan Now >]]></string>
+    <string name="add_item"><![CDATA[Add Item >]]></string>
+    <string name="use_camera_to_scan_your_food_products">Use camera to scan your food products</string>
+    <string name="track_expiration_dates_and_quantity">Track expiration dates and quantity</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="title_activity_scan">ScanActivity</string>
 </resources>
