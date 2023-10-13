@@ -72,4 +72,13 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // -ZL
+    implementation ("com.google.android.material:material:1.1.0")
+
+    // Dependencies for barcode scanning
+    // -ZL
+    // ML Kit Barcode scanner
+    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:16.1.2")
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 }
