@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private Button scanMove;
     private ActivityMainBinding binding;
 
-    // textbox for debug on barcode
-    private TextView barcodeResultView;
+    // handler for user fridge
+    private DBHandler dbHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // textbox for debug on barcode
-        barcodeResultView = findViewById(R.id.barcode_debug);
+        // creating dbhandler class for user fridge and giving it context
+        dbHandler = new DBHandler(MainActivity.this);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -69,39 +71,44 @@ public class MainActivity extends AppCompatActivity {
         // these will be changed in the future to add items and display error codes to the user
         gmsBarcodeScanner
                 .startScan()
-                .addOnSuccessListener(barcode -> barcodeResultView.setText(getSuccessfulMessage(barcode)))
+                .addOnSuccessListener(this::scanSuccessful)
                 .addOnFailureListener(
-                        e -> barcodeResultView.setText(getErrorMessage(e)))
+                        this::getErrorMessage)
                 .addOnCanceledListener(
-                        () -> barcodeResultView.setText(getString(R.string.error_scanner_cancelled)));
+                        () -> Toast.makeText(MainActivity.this, getString(R.string.error_scanner_cancelled), Toast.LENGTH_SHORT).show());
     }
 
     // function for a successful barcode reading -ZL
-    private String getSuccessfulMessage(com.google.mlkit.vision.barcode.common.Barcode barcode) {
+    private void scanSuccessful(com.google.mlkit.vision.barcode.common.Barcode barcode) {
         // just display something in the home page currently for debug
-        // will incorporate with the database in future changee
+        // will incorporate with the database in future change
         String barcodeValue =
                 String.format(
                         Locale.US,
                         "Barcode Value: %s",
                         barcode.getDisplayValue());
-        return getString(R.string.barcode_result, barcodeValue);
+
+        dbHandler.addItem(barcodeValue);
+
+        Toast.makeText(MainActivity.this, "Item with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_SHORT).show();
     }
 
     // function if an exception is thrown while trying to read barcodes -ZL
     @SuppressLint("SwitchIntDef")
-    private String getErrorMessage(Exception e) {
+    private void getErrorMessage(Exception e) {
         if (e instanceof MlKitException) {
             switch (((MlKitException) e).getErrorCode()) {
                 case MlKitException.PERMISSION_DENIED:
-                    return getString(R.string.error_camera_permission_not_granted);
+                    Toast.makeText(MainActivity.this, getString(R.string.error_camera_permission_not_granted), Toast.LENGTH_SHORT).show();
+                    return;
                 case MlKitException.UNAVAILABLE:
-                    return getString(R.string.error_app_name_unavailable);
+                    Toast.makeText(MainActivity.this, getString(R.string.error_app_name_unavailable), Toast.LENGTH_SHORT).show();
+                    return;
                 default:
-                    return getString(R.string.error_default_message, e);
+                    Toast.makeText(MainActivity.this, getString(R.string.error_default_message, e), Toast.LENGTH_SHORT).show();
             }
         } else {
-            return e.getMessage();
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }
