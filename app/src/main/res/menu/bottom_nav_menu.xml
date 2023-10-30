@@ -5,7 +5,7 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/icons8_fridge_50"
-        android:title="@string/fridge_buddy" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/navigation_dashboard"

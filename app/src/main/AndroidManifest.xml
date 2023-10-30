@@ -13,9 +13,9 @@
         android:theme="@style/Theme.FridgeBuddy"
         tools:targetApi="31" >
         <activity
-            android:name=".ScanActivity"
+            android:name=".AddActivity"
             android:exported="false"
-            android:label="@string/title_activity_scan"
+            android:label="Add Item"
             android:theme="@style/Theme.FridgeBuddy" />
 
         <!-- removed this because i changed how the barcodes were being scanned
