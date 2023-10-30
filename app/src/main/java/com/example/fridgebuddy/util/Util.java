@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 
 import com.example.fridgebuddy.AppDatabase;
-import com.example.fridgebuddy.Item;
 import com.example.fridgebuddy.R;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
@@ -15,6 +14,9 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 
 /**
@@ -24,20 +26,23 @@ public class Util extends Application {
     private Activity activity;
     // db test
     private AppDatabase database;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     /**
-     * Scan function, allows us to use the barcode scanner in whatever context we are in
-     * by using the activity parameter
+     * Scan function, allows us to use the barcode scanner in whatever activity we want
      * @param activity
      */
-
     public void Scan(Activity activity, AppDatabase database) {
         this.activity = activity;
         this.database = database;
 
 
-        // create a new instance of the options and barcode scanner and build it, can use this to change
-        // options in the future if we want or change the context that the barcode is running in
+
+        /*
+          create a new instance of the options and barcode scanner and build it, can use this to change
+          options in the future if we want or change the context that the barcode is running in
+         */
+
         GmsBarcodeScannerOptions.Builder optionsBuilder = new GmsBarcodeScannerOptions.Builder();
         GmsBarcodeScanner gmsBarcodeScanner =
                 GmsBarcodeScanning.getClient(activity.getApplicationContext(), optionsBuilder.build());
@@ -65,10 +70,14 @@ public class Util extends Application {
                         barcode.getDisplayValue());
 
 
-        Item testItem = new Item(barcodeValue, "test", "10/30/2023");
+        // test item
+        // Item testItem = new Item(barcodeValue, "test", "10/30/2023");
 
-        // database.itemDao().upsertItem(testItem);
 
+        executor.execute(() -> {
+            // this is where item will be upserted
+            // database.itemDao().upsertItem(testItem);
+        });
 
         Toast.makeText(activity.getApplicationContext(), "Item with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_SHORT).show();
     }
