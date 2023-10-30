@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:adjustViewBounds="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:isScrollContainer="false"
+        android:windowSoftInputMode="adjustPan"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="ExtraText">
+
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="231dp"
+                android:layout_height="85dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="521dp"
+                android:layout_marginEnd="80dp"
+                android:backgroundTint="#92F2B9"
+                android:capitalize="words"
+                android:fontFamily="@font/vidaloka"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:ignore="Deprecated,RelativeOverlap,TextViewEdits" />
+
+            <Button
+                android:id="@+id/scanBarcode"
+                android:layout_width="206dp"
+                android:layout_height="58dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="37dp"
+                android:layout_marginEnd="179dp"
+                android:backgroundTint="#299B56"
+                android:capitalize="words"
+                android:fontFamily="@font/vidaloka"
+                android:text="@string/scan_barcode2"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:ignore="Deprecated,RelativeOverlap,TextViewEdits" />
+
+            <TextView
+                android:id="@+id/enterManually"
+                android:layout_width="145dp"
+                android:layout_height="43dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="46dp"
+                android:layout_marginEnd="17dp"
+                android:fontFamily="@font/vidaloka"
+                android:gravity="center"
+                android:text="@string/or_enter_manually"
+                android:textColor="#000000" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/productNameEditText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="389dp"
+                android:layout_height="78dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="498dp"
+                android:foregroundGravity="center">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/vidaloka"
+                    android:hint="@string/product_name"
+                    android:inputType="text" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/monthSpinner"
+                android:layout_width="139dp"
+                android:layout_height="63dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="124dp"
+                android:layout_marginTop="274dp"
+                android:gravity="center"
+                android:text="@string/month" />
+
+            <Spinner
+                android:id="@+id/daySpinner"
+                android:layout_width="108dp"
+                android:layout_height="63dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="7dp"
+                android:layout_marginBottom="366dp"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="Day" />
+
+            <Spinner
+                android:id="@+id/yearSpinner"
+                android:layout_width="108dp"
+                android:layout_height="63dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="276dp"
+                android:layout_marginBottom="366dp"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="Year" />
+
+            <TextView
+                android:id="@+id/expirationDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="230dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="Expiration Date"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/quantityEditText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="389dp"
+                android:layout_height="78dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="3dp"
+                android:layout_marginBottom="225dp"
+                android:foregroundGravity="center">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/vidaloka"
+                    android:hint="@string/quantity"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
