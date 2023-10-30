@@ -67,7 +67,7 @@ public class Util extends Application {
 
         Item testItem = new Item(barcodeValue, "test", "10/30/2023");
 
-        database.itemDao().upsertItem(testItem);
+        // database.itemDao().upsertItem(testItem);
 
 
         Toast.makeText(activity.getApplicationContext(), "Item with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_SHORT).show();
