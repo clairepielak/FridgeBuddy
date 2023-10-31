@@ -81,4 +81,12 @@ dependencies {
     // ML Kit Barcode scanner
     implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+
+    // Room
+    val room_version = "2.6.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
 }
