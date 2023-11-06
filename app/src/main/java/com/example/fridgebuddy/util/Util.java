@@ -13,6 +13,8 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -105,12 +107,32 @@ public class Util extends Application {
      * Add an Item without using the barcode scanner,
      * made for items that we don't have in our database of items.
      * Allows users to create their own items that we didn't account for
+     * @param activity passes activity to allow the Toast to be shown
      * @param database give the database that you want to access, in our case it will almost always be the AppDatabase
      * @param name name of item given
-     * @param date date of expiration, needs to be a java.util.Date variable
+     * @param dateString date of expiration, needs to be a String datatype, will be parsed to a Date
      */
-    public void AddItem(AppDatabase database, String name, Date date) {
-        // has to be executed off of main thread
-        executor.execute(() -> database.itemDao().upsertItem(new Item(null, name, date)));
+    public void AddItem(Activity activity, AppDatabase database, String name, String dateString) {
+        try {
+            // parse dateString to date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = dateFormat.parse(dateString);
+
+            // add to database
+            executor.execute(() -> database.itemDao().upsertItem(new Item(null, name, date)));
+
+            //Lets the user know the item was added to their inventory
+            Toast.makeText(activity, "Item added successfully", Toast.LENGTH_SHORT).show();
+        } catch (ParseException e) {
+            // Handle the parsing exception if the date format is incorrect.
+
+            // REMOVE BEFORE RELEASE
+            // print error
+            System.err.println("Invalid date format. Please enter the date in the format dd/MM/yyyy");
+            // print stackTrace
+            e.printStackTrace();
+        }
+
+
     }
 }
