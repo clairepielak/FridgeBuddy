@@ -9,20 +9,31 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.fridgebuddy.util.Util;
+
 import java.util.Calendar;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fridgebuddy.util.Util;
 
 
 public class AddActivity extends AppCompatActivity {
 
+    private Util util;
+
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        // initialize util method and database
+        util = new Util();
+        database = AppDatabase.getDatabase(getApplicationContext());
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);
@@ -73,6 +84,15 @@ public class AddActivity extends AppCompatActivity {
         }
         // Add the button for saving and redirecting to the MainActivity
         Button saveButton = findViewById(R.id.save);
+
+        Button scanBarcode = findViewById(R.id.scanBarcode);
+        scanBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                util.Scan(AddActivity.this, database);
+            }
+        });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

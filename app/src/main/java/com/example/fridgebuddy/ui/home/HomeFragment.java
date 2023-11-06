@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.fridgebuddy.AddActivity;
+import com.example.fridgebuddy.AppDatabase;
+import com.example.fridgebuddy.MainActivity;
 import com.example.fridgebuddy.R;
+import com.example.fridgebuddy.util.Util;
 
 // imports for Date -SM
 import java.text.SimpleDateFormat;
@@ -25,6 +28,9 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
+    private Util util;
+
+    private AppDatabase database;
 
     private View root;
 
@@ -52,6 +58,9 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
 
+        util = new Util();
+        database = AppDatabase.getDatabase(requireContext());
+
         // Find the TextView with the ID "dayOfWeek" in the layout
         TextView dayOfWeekTextView = root.findViewById(R.id.dayOfWeek);
 
@@ -67,8 +76,8 @@ public class HomeFragment extends Fragment {
         // Set the text of the day of the week TextView -SM
         dayOfWeekTextView.setText(currentDayOfWeek);
 
-        /// Create a SimpleDateFormat to format the date to display the month and day (MMMM dd)
-        SimpleDateFormat sdfMonthAndDay = new SimpleDateFormat("MMMM dd", Locale.getDefault());
+        /// Create a SimpleDateFormat to format the date to display the month and day (MMMM d)
+        SimpleDateFormat sdfMonthAndDay = new SimpleDateFormat("MMMM d", Locale.getDefault());
 
         // Get the current date and format it to extract the month and day
         String currentMonthAndDay = sdfMonthAndDay.format(new Date());
@@ -103,11 +112,12 @@ public class HomeFragment extends Fragment {
         // Find the Add Item button by its ID in the layout
         Button addItemButton = root.findViewById(R.id.AddItem);
 
-        scanNowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Will be used for the Scan Now button
-
+        // Allows the scannow button on the home page to be used when on return
+        // from a different tab
+        scanNowButton.setOnClickListener(v -> {
+            if (requireActivity() instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                util.Scan(mainActivity, database);
             }
         });
         // Add functionality to the add item button within the fragment

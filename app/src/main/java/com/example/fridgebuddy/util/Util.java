@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 
 import com.example.fridgebuddy.AppDatabase;
+import com.example.fridgebuddy.MainActivity;
 import com.example.fridgebuddy.R;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
@@ -32,6 +33,8 @@ public class Util extends Application {
      * Scan function, allows us to use the barcode scanner in whatever activity we want
      * @param activity
      */
+
+    // Changed so the scan method can accept an instance of any activity -SM
     public void Scan(Activity activity, AppDatabase database) {
         this.activity = activity;
         this.database = database;
