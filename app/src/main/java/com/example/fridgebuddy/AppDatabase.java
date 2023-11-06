@@ -5,8 +5,11 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+import com.example.fridgebuddy.util.DateTypeConverter;
 
 @Database(entities = {Item.class}, version = 1)
+@TypeConverters(DateTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
