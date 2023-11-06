@@ -6,19 +6,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.fridgebuddy.util.Util;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.fridgebuddy.util.Util;
-
 
 public class AddActivity extends AppCompatActivity {
 
@@ -33,7 +31,7 @@ public class AddActivity extends AppCompatActivity {
 
         // initialize util method and database
         util = new Util();
-        database = AppDatabase.getDatabase(getApplicationContext());
+        database = DatabaseSingleton.getInstance(getApplicationContext());
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);
@@ -96,10 +94,19 @@ public class AddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Lets the user know the item was added to their inventory
-                Toast.makeText(AddActivity.this, "Item added successfully", Toast.LENGTH_SHORT).show();
-
                 // Will insert code for saving the values the user inputs to the db -SM
+                TextInputLayout textLayout = findViewById(R.id.productNameEditText);
+                EditText editText = textLayout.getEditText();
+                if (editText != null) {
+                    String name = editText.getText().toString();
+
+                    // the date is for testing
+                    // needs to be changed to the date given from spinners
+                    util.AddItem(AddActivity.this, database, name, "11/20/2023");
+
+                    editText.setText("");
+                }
+
 
                 // Redirect to InventoryFragment
                 Intent intent = new Intent(AddActivity.this, MainActivity.class);
