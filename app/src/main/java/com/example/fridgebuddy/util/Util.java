@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.widget.Toast;
 
-import com.example.fridgebuddy.AppDatabase;
+import com.example.fridgebuddy.ItemDatabase;
 import com.example.fridgebuddy.Item;
 import com.example.fridgebuddy.R;
 import com.google.mlkit.common.MlKitException;
@@ -34,7 +34,7 @@ public class Util extends Application {
      * @param activity give the current activity the scan is associated with
      * @param database give the database that you want to access, in our case it will almost always be the AppDatabase
      */
-    public void Scan(Activity activity, AppDatabase database) {
+    public void Scan(Activity activity, ItemDatabase database) {
         /*
           create a new instance of the options and barcode scanner and build it, can use this to change
           options in the future if we want or change the context that the barcode is running in
@@ -45,7 +45,7 @@ public class Util extends Application {
 
         /*
           start the barcode scanning and do something on success/fail/cancel
-          these will be changed in the future to add items and display error codes to the user
+          uses Google Mobile Services barcode scanner
         */
         gmsBarcodeScanner
                 .startScan()
@@ -59,7 +59,7 @@ public class Util extends Application {
      * adds the item associated with that barcode to the user's fridge database.
      * Will only add the item if it exists in our database of items we accounted for.
      */
-    private void scanSuccessful(com.google.mlkit.vision.barcode.common.Barcode barcode, AppDatabase database, Activity activity) {
+    private void scanSuccessful(com.google.mlkit.vision.barcode.common.Barcode barcode, ItemDatabase database, Activity activity) {
         // just display something in the home page currently for debug
         // will incorporate with the database in future change
         String barcodeValue =
@@ -112,7 +112,7 @@ public class Util extends Application {
      * @param name name of item given
      * @param dateString date of expiration, needs to be a String datatype, will be parsed to a Date
      */
-    public void AddItem(Activity activity, AppDatabase database, String name, String dateString) {
+    public void AddItem(Activity activity, ItemDatabase database, String name, String dateString) {
         try {
             // parse dateString to date
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

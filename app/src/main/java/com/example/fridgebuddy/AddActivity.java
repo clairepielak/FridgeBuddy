@@ -21,8 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddActivity extends AppCompatActivity {
 
     private Util util;
-
-    private AppDatabase database;
+    private ItemDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class AddActivity extends AppCompatActivity {
 
         // initialize util method and database
         util = new Util();
-        database = DatabaseSingleton.getInstance(getApplicationContext());
+        database = ItemDatabase.getDatabase(getApplicationContext());
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);

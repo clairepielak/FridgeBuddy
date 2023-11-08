@@ -6,14 +6,18 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity
+@Entity(tableName = "user_items")
 public class Item {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     public int id;
+
     @ColumnInfo(name = "upc")
     public String upc;
+
     @ColumnInfo(name = "name")
     public String name;
+
     @ColumnInfo(name = "exp_date")
     public Date expDate;
 
