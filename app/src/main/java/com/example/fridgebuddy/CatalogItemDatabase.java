@@ -13,7 +13,7 @@ public abstract class CatalogItemDatabase extends RoomDatabase {
 
     public static CatalogItemDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), CatalogItemDatabase.class, "catalog_items").fallbackToDestructiveMigration().build();
+            INSTANCE = Room.databaseBuilder(context, CatalogItemDatabase.class, "catalog_items").createFromAsset("catalog_items.db").build();
         }
 
         return INSTANCE;
