@@ -16,7 +16,7 @@ public abstract class ItemDatabase extends RoomDatabase {
 
     public static ItemDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ItemDatabase.class, "fridge_db").fallbackToDestructiveMigration().build();
+            INSTANCE = Room.databaseBuilder(context, ItemDatabase.class, "user_items.db").fallbackToDestructiveMigration().build();
         }
 
         return INSTANCE;

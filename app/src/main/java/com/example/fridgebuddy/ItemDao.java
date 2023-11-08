@@ -17,9 +17,9 @@ public interface ItemDao {
     @Delete
     void deleteItem(Item item);
 
-    @Query("SELECT * FROM item ORDER BY name ASC")
+    @Query("SELECT * FROM user_items ORDER BY name ASC")
     LiveData<List<Item>> orderItemByName();
 
-    @Query("SELECT * FROM item ORDER BY exp_date ASC")
+    @Query("SELECT * FROM user_items ORDER BY exp_date ASC")
     LiveData<List<Item>> orderItemByExpDate();
 }
