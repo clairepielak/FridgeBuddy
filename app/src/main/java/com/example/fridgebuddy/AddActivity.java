@@ -3,7 +3,6 @@ package com.example.fridgebuddy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddActivity extends AppCompatActivity {
 
     private Util util;
-    private ItemDatabase database;
+    private ItemDatabase itemDB;
+    private CatalogItemDatabase catalogDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,8 @@ public class AddActivity extends AppCompatActivity {
 
         // initialize util method and database
         util = new Util();
-        database = ItemDatabase.getDatabase(getApplicationContext());
+        itemDB = ItemDatabase.getDatabase(getApplicationContext());
+        catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);
@@ -83,34 +84,26 @@ public class AddActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.save);
 
         Button scanBarcode = findViewById(R.id.scanBarcode);
-        scanBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                util.Scan(AddActivity.this, database);
+        scanBarcode.setOnClickListener(view -> util.Scan(AddActivity.this, itemDB, catalogDB));
+
+        saveButton.setOnClickListener(view -> {
+            // Will insert code for saving the values the user inputs to the db -SM
+            TextInputLayout textLayout = findViewById(R.id.productNameEditText);
+            EditText editText = textLayout.getEditText();
+            if (editText != null) {
+                String name = editText.getText().toString();
+
+                // the date is for testing
+                // needs to be changed to the date given from spinners
+                util.AddItem(AddActivity.this, itemDB, name, "11/20/2023");
+
+                editText.setText("");
             }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Will insert code for saving the values the user inputs to the db -SM
-                TextInputLayout textLayout = findViewById(R.id.productNameEditText);
-                EditText editText = textLayout.getEditText();
-                if (editText != null) {
-                    String name = editText.getText().toString();
-
-                    // the date is for testing
-                    // needs to be changed to the date given from spinners
-                    util.AddItem(AddActivity.this, database, name, "11/20/2023");
-
-                    editText.setText("");
-                }
 
 
-                // Redirect to InventoryFragment
-                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+            // Redirect to InventoryFragment
+            Intent intent = new Intent(AddActivity.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 
