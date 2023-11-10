@@ -1,5 +1,6 @@
 package com.example.fridgebuddy;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,12 +8,21 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "catalog_items")
 public class CatalogItem {
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "upc")
-    public String upc;
+    private String upc;
 
-    @ColumnInfo(name= "name")
-    public String name;
+    private String name;
 
-    @ColumnInfo(name = "expDays")
-    public int daysUntilExp;
+    private int daysUntilExp;
+
+    // setters/getters
+    public void setUpc(@NonNull String upc) { this.upc = upc; }
+    public void setName(String name) { this.name = name; }
+    public void setDaysUntilExp(int daysUntilExp) { this.daysUntilExp = daysUntilExp; }
+
+    @NonNull
+    public String getUpc() { return upc; }
+    public String getName() { return name; }
+    public int getDaysUntilExp() { return daysUntilExp; }
 }
