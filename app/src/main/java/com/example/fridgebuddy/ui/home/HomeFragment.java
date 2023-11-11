@@ -12,7 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.fridgebuddy.AddActivity;
-import com.example.fridgebuddy.AppDatabase;
+import com.example.fridgebuddy.CatalogItemDatabase;
+import com.example.fridgebuddy.ItemDatabase;
 import com.example.fridgebuddy.MainActivity;
 import com.example.fridgebuddy.R;
 import com.example.fridgebuddy.util.Util;
@@ -29,8 +30,8 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private Util util;
-
-    private AppDatabase database;
+    private ItemDatabase itemDB;
+    private CatalogItemDatabase catalogDB;
 
     private View root;
 
@@ -59,7 +60,8 @@ public class HomeFragment extends Fragment {
 
 
         util = new Util();
-        database = AppDatabase.getDatabase(requireContext());
+        itemDB = ItemDatabase.getDatabase(requireContext().getApplicationContext());
+        catalogDB = CatalogItemDatabase.getDatabase(requireContext().getApplicationContext());
 
         // Find the TextView with the ID "dayOfWeek" in the layout
         TextView dayOfWeekTextView = root.findViewById(R.id.dayOfWeek);
@@ -117,7 +119,7 @@ public class HomeFragment extends Fragment {
         scanNowButton.setOnClickListener(v -> {
             if (requireActivity() instanceof MainActivity) {
                 MainActivity mainActivity = (MainActivity) requireActivity();
-                util.Scan(mainActivity, database);
+                util.Scan(mainActivity, itemDB, catalogDB);
             }
         });
         // Add functionality to the add item button within the fragment

@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private Util util;
-    private AppDatabase database;
+    private ItemDatabase itemDB;
+    private CatalogItemDatabase catalogDB;
 
 
     @Override
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize util method and database
         util = new Util();
-        database = AppDatabase.getDatabase(getApplicationContext());
+        itemDB = ItemDatabase.getDatabase(getApplicationContext());
+        catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -46,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         scanMove=findViewById(R.id.scannow);
-        scanMove.setOnClickListener(v -> {
-            util.Scan(MainActivity.this, database);
-        });
+        scanMove.setOnClickListener(v -> util.Scan(MainActivity.this, itemDB, catalogDB));
     }
 }

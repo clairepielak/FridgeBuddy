@@ -8,16 +8,15 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.example.fridgebuddy.util.DateTypeConverter;
 
-@Database(entities = {Item.class}, version = 2)
+@Database(entities = {Item.class}, version = 3, exportSchema = false)
 @TypeConverters(DateTypeConverter.class)
-public abstract class AppDatabase extends RoomDatabase {
-    private static AppDatabase INSTANCE;
-
+public abstract class ItemDatabase extends RoomDatabase {
+    private static ItemDatabase INSTANCE;
     public abstract ItemDao itemDao();
 
-    public static AppDatabase getDatabase(Context context) {
+    public static ItemDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "fridge_db").fallbackToDestructiveMigration().build();
+            INSTANCE = Room.databaseBuilder(context, ItemDatabase.class, "user_items.db").fallbackToDestructiveMigration().build();
         }
 
         return INSTANCE;
