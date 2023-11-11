@@ -31,7 +31,7 @@ public class AddActivity extends AppCompatActivity {
 
         // initialize util method and database
         util = new Util();
-        database = DatabaseSingleton.getInstance(getApplicationContext());
+        database = AppDatabase.getDatabase(getApplicationContext());
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);
