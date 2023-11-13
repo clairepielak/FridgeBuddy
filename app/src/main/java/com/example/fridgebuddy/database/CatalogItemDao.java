@@ -1,4 +1,4 @@
-package com.example.fridgebuddy;
+package com.example.fridgebuddy.database;
 
 import androidx.room.Dao;
 import androidx.room.Query;

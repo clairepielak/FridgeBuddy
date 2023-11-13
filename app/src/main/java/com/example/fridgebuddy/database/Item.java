@@ -1,4 +1,4 @@
-package com.example.fridgebuddy;
+package com.example.fridgebuddy.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
