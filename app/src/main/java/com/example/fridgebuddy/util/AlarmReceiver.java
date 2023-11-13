@@ -35,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         // Create notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "channel_id")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel_id)
                 .setSmallIcon(R.drawable.icons8_fridge_48)
                 .setContentTitle(title)
                 .setContentText(message)
