@@ -7,13 +7,14 @@ import android.graphics.BitmapFactory;
 import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Converters {
     // date converters
     @TypeConverter
-    public static Date fromTimeStamp(Long value) {
+    public static Date longToDate(Long value) {
         return value == null ? null : new Date(value);
     }
 
@@ -27,6 +28,17 @@ public class Converters {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy");
         return sdf.format(date);
+    }
+
+    @TypeConverter
+    public static Date stringToDate(String dateString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+            return null; // Return null or throw a custom exception to indicate parsing failure
+        }
     }
 
     // bitmap converters

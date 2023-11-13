@@ -48,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         scanMove=findViewById(R.id.scannow);
-        scanMove.setOnClickListener(v -> util.Scan(MainActivity.this, itemDB, catalogDB));
+        scanMove.setOnClickListener(v -> util.scan(MainActivity.this, itemDB, catalogDB));
     }
 }

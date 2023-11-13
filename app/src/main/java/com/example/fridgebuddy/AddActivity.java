@@ -84,7 +84,7 @@ public class AddActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.save);
 
         Button scanBarcode = findViewById(R.id.scanBarcode);
-        scanBarcode.setOnClickListener(view -> util.Scan(AddActivity.this, itemDB, catalogDB));
+        scanBarcode.setOnClickListener(view -> util.scan(AddActivity.this, itemDB, catalogDB));
 
         saveButton.setOnClickListener(view -> {
             // Will insert code for saving the values the user inputs to the db -SM
@@ -95,7 +95,7 @@ public class AddActivity extends AppCompatActivity {
 
                 // the date is for testing
                 // needs to be changed to the date given from spinners
-                util.AddItem(AddActivity.this, itemDB, name, "11/20/2023");
+                util.addItem(AddActivity.this, itemDB, name, "11/20/2023");
 
                 editText.setText("");
             }
