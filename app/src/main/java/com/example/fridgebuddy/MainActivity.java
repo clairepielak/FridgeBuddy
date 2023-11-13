@@ -3,6 +3,8 @@ package com.example.fridgebuddy;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.util.NotificationPermissionHelper;
 import com.example.fridgebuddy.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

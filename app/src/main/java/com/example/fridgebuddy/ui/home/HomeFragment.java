@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.fridgebuddy.AddActivity;
-import com.example.fridgebuddy.CatalogItemDatabase;
-import com.example.fridgebuddy.ItemDatabase;
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.MainActivity;
 import com.example.fridgebuddy.R;
 import com.example.fridgebuddy.util.Util;

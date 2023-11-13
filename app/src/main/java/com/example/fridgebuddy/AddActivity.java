@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.util.Util;
 import com.google.android.material.textfield.TextInputLayout;
 
