@@ -16,7 +16,48 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="ExtraText">
+
+
+            <TextView
+                android:id="@+id/dayOfWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="90dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="Day of the Week"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/monthAndDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="111dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="Month and Day"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Notifications"
+                android:layout_width="149dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="65dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="Notifications"
+                android:textColor="#252424"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/green_two"
@@ -27,9 +68,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginStart="26dp"
-                android:layout_marginTop="165dp"
-                android:layout_marginEnd="19dp"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="257dp"
+                android:layout_marginEnd="22dp"
                 android:background="@drawable/green_two"
                 android:clickable="false"
                 android:fontFamily="@font/vidaloka"
@@ -43,48 +84,14 @@
                 android:layout_below="@id/AddItem"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="179dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginTop="271dp"
+                android:layout_marginEnd="33dp"
                 android:backgroundTint="#FFFFFF"
                 android:fontFamily="@font/vidaloka"
                 android:text="@string/scan_now"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 tools:ignore="RelativeOverlap" />
-
-            <TextView
-                android:id="@+id/mintbox3"
-                android:layout_width="wrap_content"
-                android:layout_height="77dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="26dp"
-                android:layout_marginTop="68dp"
-                android:layout_marginEnd="19dp"
-                android:background="@drawable/mint_box"
-                android:clickable="false"
-                android:fontFamily="@font/vidaloka"
-                android:textAlignment="center"
-                tools:ignore="DuplicateIds" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="162dp"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/mintbox3"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="84dp"
-                android:layout_marginEnd="194dp"
-                android:fontFamily="@font/vidaloka"
-                android:text="@string/fridge_inventory"
-                android:textAlignment="textStart"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/AddItem"
@@ -92,15 +99,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="82dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginTop="174dp"
+                android:layout_marginEnd="33dp"
                 android:backgroundTint="#FFFFFF"
                 android:fontFamily="@font/vidaloka"
                 android:text="@string/add_item"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                android:textStyle="normal"
+                android:textStyle="bold"
                 tools:ignore="RelativeOverlap" />
 
             <TextView
@@ -109,8 +116,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="175dp"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="267dp"
                 android:fontFamily="@font/vidaloka"
                 android:text="@string/scan_barcode"
                 android:textColor="#FFFFFF"
@@ -123,12 +130,31 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="207dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="299dp"
                 android:fontFamily="@font/vidaloka"
                 android:text="@string/use_camera_to_scan_your_food_products"
                 android:textColor="#FFFFFF"
                 android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/mintbox3"
+                android:layout_width="wrap_content"
+                android:layout_height="77dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="160dp"
+                android:layout_marginEnd="22dp"
+                android:background="@drawable/mint_box"
+                android:clickable="false"
+                android:fontFamily="@font/vidaloka"
+                android:textAlignment="center"
+                tools:ignore="DuplicateIds" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -136,13 +162,106 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="115dp"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="207dp"
                 android:fontFamily="@font/vidaloka"
                 android:text="@string/track_expiration_dates_and_quantity"
                 android:textSize="11sp" />
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="162dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="176dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="@string/fridge_inventory"
+                android:textAlignment="textStart"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Will be used later on when we have items added -->
+
+            <TextView
+                android:id="@+id/Notif1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="49dp"
+                android:layout_marginEnd="95dp"
+                android:text="First Notification" />
+
+            <!-- Will be used later on when we have items added -->
+
+            <TextView
+                android:id="@+id/Notif2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="78dp"
+                android:layout_marginEnd="77dp"
+                android:text="Second Notification" />
+
+            <TextView
+                android:id="@+id/expiringFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="349dp"
+                android:layout_marginEnd="243dp"
+                android:fontFamily="@font/vidaloka"
+                android:text="Expiring Food"
+                android:textColor="#101010"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- ListView to display the list of food items with expiration dates
+                   Will be used when we have items to display-->
+
+            <ListView
+                android:id="@+id/idLVLanguages"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp" >
+
+            </ListView>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="5dp">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="77dp"
+                    android:layout_height="79dp"
+                    android:src="@drawable/calendar" />
+
+                <TextView
+                    android:id="@+id/dateCalendar"
+                    android:layout_width="43dp"
+                    android:layout_height="36dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="Date"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
+
     </ScrollView>
 
 </RelativeLayout>
