@@ -35,7 +35,6 @@
                 android:layout_height="61dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="64dp"
-                android:src="@tools:sample/avatars"
                 app:cardCornerRadius="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/food_name"
