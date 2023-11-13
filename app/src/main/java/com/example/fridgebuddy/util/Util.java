@@ -191,7 +191,7 @@ public class Util extends Application {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         // intent that triggers on alarm
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
 
         // pass the item name and exp date into the intent
         intent.putExtra("ITEM_NAME", item.getName());
