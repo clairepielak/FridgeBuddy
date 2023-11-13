@@ -8,12 +8,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.example.fridgebuddy.CatalogItem;
-import com.example.fridgebuddy.CatalogItemDatabase;
-import com.example.fridgebuddy.ItemDatabase;
-import com.example.fridgebuddy.Item;
+import com.example.fridgebuddy.database.CatalogItem;
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
+import com.example.fridgebuddy.database.Item;
 import com.example.fridgebuddy.R;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
@@ -142,7 +143,7 @@ public class Util extends Application {
                 itemDB.itemDao().upsertItem(item);
 
                 // set reminder
-                setReminder(getApplicationContext(), item);
+                setReminder(activity.getApplicationContext(), item);
 
                 // display a toast to let the user know item has been added
                 activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), name  + " has been added.", Toast.LENGTH_LONG).show());
@@ -211,9 +212,9 @@ public class Util extends Application {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             }
         } catch (SecurityException e) {
-            // Handle the SecurityException appropriately
-            // You might want to log the exception or take other actions
             e.printStackTrace();
+
+            Log.e("Reminder", "SecurityException: " + e.getMessage());
         }
     }
 
