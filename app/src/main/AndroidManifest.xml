@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
 
-    <!-- used to read data for db -ZL -->
+    <!-- ZL PERMS FOR NOTIFS -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -18,21 +19,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FridgeBuddy"
         tools:targetApi="31" >
+
+        <!-- Declare AlarmReceiver -->
+        <receiver
+            android:name=".util.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+
         <activity
             android:name=".AddActivity"
             android:exported="false"
             android:label="Add Item"
             android:theme="@style/Theme.FridgeBuddy" />
-
-        <!-- removed this because i changed how the barcodes were being scanned
-              not being done in an activity now
-               final removal determined by team -ZL -->
-        <!--<activity
-            android:name=".ui.ScanBarcode.ScanActivity"
-            android:exported="false"
-            android:label="@string/title_activity_scan"
-            android:theme="@style/Theme.FridgeBuddy" />-->
-
         <activity
             android:name=".MainActivity"
             android:exported="true" >
