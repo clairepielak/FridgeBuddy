@@ -3,6 +3,7 @@ package com.example.fridgebuddy;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.fridgebuddy.util.NotificationPermissionHelper;
 import com.example.fridgebuddy.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         util = new Util();
         itemDB = ItemDatabase.getDatabase(getApplicationContext());
         catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
+
+        // ask for notification permissions
+        NotificationPermissionHelper.requestNotificationPermission(this);
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
