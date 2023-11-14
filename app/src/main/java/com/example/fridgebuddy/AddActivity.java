@@ -3,7 +3,6 @@ package com.example.fridgebuddy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddActivity extends AppCompatActivity {
 
     private Util util;
-
     private ItemDatabase itemDB;
     private CatalogItemDatabase catalogDB;
 
@@ -88,29 +86,26 @@ public class AddActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.save);
 
         Button scanBarcode = findViewById(R.id.scanBarcode);
-        scanBarcode.setOnClickListener(view -> util.Scan(AddActivity.this, itemDB, catalogDB));
+        scanBarcode.setOnClickListener(view -> util.scan(AddActivity.this, itemDB, catalogDB));
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Will insert code for saving the values the user inputs to the db -SM
-                TextInputLayout textLayout = findViewById(R.id.productNameEditText);
-                EditText editText = textLayout.getEditText();
-                if (editText != null) {
-                    String name = editText.getText().toString();
+        saveButton.setOnClickListener(view -> {
+            // Will insert code for saving the values the user inputs to the db -SM
+            TextInputLayout textLayout = findViewById(R.id.productNameEditText);
+            EditText editText = textLayout.getEditText();
+            if (editText != null) {
+                String name = editText.getText().toString();
 
-                    // the date is for testing
-                    // needs to be changed to the date given from spinners
-                    util.AddItem(AddActivity.this, itemDB, name, "11/20/2023");
+                // the date is for testing
+                // needs to be changed to the date given from spinners
+                util.addItem(AddActivity.this, itemDB, name, "11/20/2023");
 
-                    editText.setText("");
-                }
-
-
-                // Redirect to InventoryFragment
-                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                startActivity(intent);
+                editText.setText("");
             }
+
+
+            // Redirect to InventoryFragment
+            Intent intent = new Intent(AddActivity.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 
