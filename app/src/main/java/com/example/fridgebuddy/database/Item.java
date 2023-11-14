@@ -1,4 +1,4 @@
-package com.example.fridgebuddy;
+package com.example.fridgebuddy.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -21,11 +21,15 @@ public class Item {
     @ColumnInfo(name = "exp_date")
     private Date expDate;
 
+    @ColumnInfo(name = "imageBytes", typeAffinity = ColumnInfo.BLOB)
+    private byte[] imageBytes;
+
     // user scanned, upc given
-    public Item(String upc, String name, Date expDate) {
+    public Item(String upc, String name, Date expDate, byte[] imageBytes) {
         this.upc = upc;
         this.name = name;
         this.expDate = expDate;
+        this.imageBytes = imageBytes;
     }
 
     // setters/getters
@@ -33,9 +37,11 @@ public class Item {
     public void setUpc(String upc) { this.upc = upc; }
     public void setName(String name) { this.name = name; }
     public void setExpDate(Date expDate) { this.expDate = expDate; }
+    public void setImageBytes(byte[] imageBytes) { this.imageBytes = imageBytes; }
 
     public int getId() { return id; }
     public String getUpc() { return upc; }
     public String getName() { return name; }
     public Date getExpDate() { return expDate; }
+    public byte[] getImageBytes() { return imageBytes; }
 }

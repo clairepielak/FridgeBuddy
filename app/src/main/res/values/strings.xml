@@ -18,7 +18,7 @@
     <string name="scan_barcode">Scan Barcode</string>
     <string name="title_activity_scan">ScanActivity</string>
 
-    // Array for each day of the month (1-31) -SM
+    <!-- Array for each day of the month (1-31) -SM -->
     <string-array name="day_number">
         <item>1</item>
         <item>2</item>
@@ -53,7 +53,7 @@
         <item>31</item>
     </string-array>
 
-    // Array for each month in a year -SM
+    <!-- Array for each month in a year -SM -->
     <string-array name="month_name">
         <item>January</item>
         <item>February</item>
@@ -69,6 +69,7 @@
         <item>December</item>
     </string-array>
 
+
     <!-- Zack Test -->
     <string name="barcode_result" translatable="false">Barcode detected.\n%1$s</string>
     <string name="error_scanner_cancelled" translatable="false">Code scanner is cancelled.</string>
@@ -82,4 +83,65 @@
     <string name="product_name">Product Name</string>
     <string name="or_enter_manually">Or enter manually</string>
     <string name="month">Month</string>
+    <string name="notification_permission_message">Notifications allow us to remind you when your food is nearing its expiration date</string>
+
+    <!-- claire add -->
+    <string-array name="food_item_name">
+        <item>Bread</item>
+        <item>Milk</item>
+        <item>Peach</item>
+        <item>Hot Dogs</item>
+        <item>Cookies</item>
+        <item>Brie Cheese</item>
+    </string-array>
+
+    <string-array name="month_expiry_date">
+    <item>12</item>
+        <item>11</item>
+        <item>10</item>
+        <item>09</item>
+        <item>08</item>
+        <item>07</item>
+        <item>06</item>
+        <item>05</item>
+        <item>04</item>
+        <item>03</item>
+        <item>02</item>
+        <item>01</item>
+    </string-array>
+
+    <integer-array name="day_expiry_date">
+        <item>22</item>   <item>23</item>  <item>24</item>  <item>25</item>
+        <item>21</item>  <item>26</item>
+        <item>20</item>
+        <item>19</item>
+        <item>18</item>
+        <item>17</item>
+        <item>16</item>
+        <item>15</item>
+        <item>14</item>
+        <item>13</item>
+        <item>12</item>
+        <item>11</item>
+        <item>10</item>
+        <item>9</item>
+        <item>8</item>
+        <item>07</item>
+        <item>06</item>
+        <item>05</item>
+        <item>04</item>
+        <item>03</item>
+        <item>02</item>
+        <item>01</item>
+    </integer-array>
+    <integer-array name="quantity">
+        <item>1</item>
+        <item>2</item>
+    </integer-array>
+
 </resources>
+
+
+
+
+
