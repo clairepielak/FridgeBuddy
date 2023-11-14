@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.fridgebuddy.AddActivity;
-import com.example.fridgebuddy.CatalogItemDatabase;
-import com.example.fridgebuddy.ItemDatabase;
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.MainActivity;
 import com.example.fridgebuddy.R;
 import com.example.fridgebuddy.util.Util;
@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
         // Set the text of the dateCalendar TextView
         dateCalendarTextView.setText(currentDateNumber);
 
-        // Find the Scan Now button by its ID in the layout
+        // Find the scan Now button by its ID in the layout
         Button scanNowButton = root.findViewById(R.id.scannow);
 
         // Find the Add Item button by its ID in the layout
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         scanNowButton.setOnClickListener(v -> {
             if (requireActivity() instanceof MainActivity) {
                 MainActivity mainActivity = (MainActivity) requireActivity();
-                util.Scan(mainActivity, itemDB, catalogDB);
+                util.scan(mainActivity, itemDB, catalogDB);
             }
         });
         // Add functionality to the add item button within the fragment

@@ -3,6 +3,9 @@ package com.example.fridgebuddy;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
+import com.example.fridgebuddy.util.NotificationPermissionHelper;
 import com.example.fridgebuddy.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         itemDB = ItemDatabase.getDatabase(getApplicationContext());
         catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
 
+        // ask for notification permissions
+        NotificationPermissionHelper.requestNotificationPermission(this);
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -48,6 +54,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         scanMove=findViewById(R.id.scannow);
-        scanMove.setOnClickListener(v -> util.Scan(MainActivity.this, itemDB, catalogDB));
+        scanMove.setOnClickListener(v -> util.scan(MainActivity.this, itemDB, catalogDB));
     }
 }

@@ -2,21 +2,25 @@ package com.example.fridgebuddy.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.example.fridgebuddy.CatalogItem;
-import com.example.fridgebuddy.CatalogItemDatabase;
-import com.example.fridgebuddy.ItemDatabase;
-import com.example.fridgebuddy.Item;
+import com.example.fridgebuddy.database.CatalogItem;
+import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.ItemDatabase;
+import com.example.fridgebuddy.database.Item;
 import com.example.fridgebuddy.R;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -31,22 +35,14 @@ public class Util extends Application {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Item scannedItem;
 
-
-
-    // used to set exp dates
-    private final Calendar calendar = Calendar.getInstance();
-    private Date expirationDate = calendar.getTime();
-    // private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy");
-
-
     // Changed so the scan method can accept an instance of any activity -SM
     /**
-     * Scan function, allows us to use the barcode scanner in whatever activity we want
+     * scan function, allows us to use the barcode scanner in whatever activity we want
      * @param activity give the current activity the scan is associated with
      * @param itemDB give the database that you want to access to the ItemDatabase for adding items to users storage
      * @param catalogDB allows us to read the data from the CatalogItemDatabase
      */
-    public void Scan(Activity activity, ItemDatabase itemDB, CatalogItemDatabase catalogDB) {
+    public void scan(Activity activity, ItemDatabase itemDB, CatalogItemDatabase catalogDB) {
         /*
           create a new instance of the options and barcode scanner and build it, can use this to change
           options in the future if we want or change the context that the barcode is running in
@@ -72,32 +68,34 @@ public class Util extends Application {
      * Will only add the item if it exists in our catalog_items.db
      */
     private void scanSuccessful(com.google.mlkit.vision.barcode.common.Barcode barcode, ItemDatabase itemDB, CatalogItemDatabase catalogDB, Activity activity) {
-        // just display something in the home page currently for debug
-        // will incorporate with the database in future change
-        String barcodeValue = String.format(barcode.getDisplayValue());
+        if (barcode.getDisplayValue() != null) {
+            // format barcodeValue to a string we can use
+            String barcodeValue = String.format(barcode.getDisplayValue());
 
-        // get data on diff thread than main, may lock up ui
-        executor.execute(() -> {
-            CatalogItem catalogItem = catalogDB.catalogItemDao().getCatalogItemByUPC(barcodeValue);
+            // get data on diff thread than main, may lock up ui
+            executor.execute(() -> {
+                CatalogItem catalogItem = catalogDB.catalogItemDao().getCatalogItemByUPC(barcodeValue);
 
-            if (catalogItem != null) {
-                // set expiration date
-                calendar.add(Calendar.DAY_OF_MONTH, catalogItem.getDaysUntilExp());
-                expirationDate = calendar.getTime();
+                if (catalogItem != null) {
+                    // set expiration date
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DAY_OF_MONTH, catalogItem.getDaysUntilExp());
+                    Date expirationDate = calendar.getTime();
 
-                // test = new Item("199901294", "Test",
-                scannedItem = new Item(barcodeValue, catalogItem.getName(), expirationDate);
+                    // test = new Item("199901294", "Test",
+                    scannedItem = new Item(barcodeValue, catalogItem.getName(), expirationDate, catalogItem.getImageBytes());
+                    itemDB.itemDao().upsertItem(scannedItem);
 
+                    // set reminder for the item
+                    setReminder(activity.getApplicationContext(), scannedItem);
 
-                itemDB.itemDao().upsertItem(scannedItem);
-
-
-                // Post a Runnable to the UI thread to display the Toast message
-                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), scannedItem.getName() + " with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_LONG).show());
-            } else {
-                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), "Unable to scan.", Toast.LENGTH_LONG).show());
-            }
-        });
+                    // Post a Runnable to the UI thread to display the Toast message
+                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), scannedItem.getName() + " with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_LONG).show());
+                } else {
+                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), "Unable to scan.", Toast.LENGTH_LONG).show());
+                }
+            });
+        }
     }
 
     /**
@@ -131,31 +129,112 @@ public class Util extends Application {
      * @param name name of item given
      * @param dateString date of expiration, needs to be a String datatype, will be parsed to a Date
      */
-    public void AddItem(Activity activity, ItemDatabase itemDB, String name, String dateString) {
-        try {
-            // parse dateString to date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = dateFormat.parse(dateString);
+    public void addItem(Activity activity, ItemDatabase itemDB, String name, String dateString) {
+        // convert string to date
+        Date date = Converters.stringToDate(dateString);
 
-            Item item = new Item(null, name, date);
+        // items must have a valid date and name. If the parsing comes back incorrectly the item cannot be added
+        if (date != null && !name.isEmpty() && !name.trim().isEmpty()) {
+            // create new Item
+            Item item = new Item(null, name, date, null);
 
             // add to database
             executor.execute(() -> {
                 itemDB.itemDao().upsertItem(item);
 
+                // set reminder
+                setReminder(activity.getApplicationContext(), item);
 
-                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), item.getName()  + " has been added.", Toast.LENGTH_LONG).show());
+                // display a toast to let the user know item has been added
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), name  + " has been added.", Toast.LENGTH_LONG).show());
             });
-        } catch (ParseException e) {
-            // Handle the parsing exception if the date format is incorrect.
-
-            // REMOVE BEFORE RELEASE
-            // print error
-            System.err.println("Invalid date format. Please enter the date in the format dd/MM/yyyy");
-            // print stackTrace
-            e.printStackTrace();
+        } else if (date == null) {
+            Toast.makeText(activity.getApplicationContext(), "The date entered was invalid", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity.getApplicationContext(), "Please enter a valid name", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    /**
+     * cancels an item's reminder then deletes item from database
+     * @param context context where reminder is stored, should always be application context since our app only stores reminders in this context
+     * @param itemDB database where user's items are stored
+     * @param item item that you would like removed
+     */
+    public void deleteItem(Context context, ItemDatabase itemDB, Item item) {
+        // cancel alarm
+        cancelReminder(context, item);
 
+        // remove item from the ItemDatabase
+        itemDB.itemDao().deleteItem(item);
+    }
+
+    /**
+     * this function will set the reminder for the product currently being added/scanned
+     * we are passing the Intent to send data to the AlarmReceiver class. The request code is out unique id will ensure that only one reminder
+     * will be made per item and allows us to cancel specific item's
+     * @param context context where the alarm will be set. This should be set to application context in our case since we want this to go off even if the app is not open.
+     * @param item the item the alarm should be set for
+     */
+    public void setReminder(Context context, Item item) {
+        // set the reminder to go off at 10am on the date the item is set to expire
+        // extract the date from the item expDate
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(item.getExpDate());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Set the alarm time to 10 AM on the extracted date
+        calendar.set(year, month, day, 10, 0, 0);
+
+        // create new AlarmManager service
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // intent that triggers on alarm
+        Intent intent = new Intent(context, AlarmReceiver.class);
+
+        // pass the item name and exp date into the intent
+        intent.putExtra("ITEM_NAME", item.getName());
+        intent.putExtra("EXP_DATE", Converters.dateToString(item.getExpDate()));
+
+        // unique request code. All item ids will be unique
+        int requestCode = item.getId();
+
+        // will be set off when alarm is triggered
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Set the alarm to the specified date and time
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+
+            Log.e("Reminder", "SecurityException: " + e.getMessage());
+        }
+    }
+
+    /**
+     * cancels an item's reminder, all variables should be the same as when setting. The AlarmManager can identify the reminder by these variables.
+     * @param context provide context that the reminder resides in. Like setReminder(), this should be application since we want all reminders to go off when app is closed.
+     * @param item item that reminder needs to be canceled
+     */
+    public void cancelReminder(Context context, Item item) {
+        // get intent and request code
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        int requestCode = item.getId();
+
+        //
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // cancel if it exists
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+        }
     }
 }

@@ -29,12 +29,16 @@
             android:paddingBottom="1dp">
 
 
+            <!-- android:src="@tools:sample/avatars"
+                Don't know what this was, I think a file may have been missed in a push,
+                was in empty hole below -ZL -->
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="61dp"
                 android:layout_height="61dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="64dp"
+
                 app:cardCornerRadius="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/food_name"
