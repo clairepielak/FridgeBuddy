@@ -185,8 +185,8 @@ public class Util extends Application {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Set the alarm time to 10 AM on the extracted date
-        calendar.set(year, month, day, 10, 0, 0);
+        // Set the alarm time to 10 AM the day before it expires
+        calendar.set(year, month, (day - 1), 10, 0, 0);
 
         // create new AlarmManager service
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -196,7 +196,6 @@ public class Util extends Application {
 
         // pass the item name and exp date into the intent
         intent.putExtra("ITEM_NAME", item.getName());
-        intent.putExtra("EXP_DATE", Converters.dateToString(item.getExpDate()));
 
         // unique request code. All item ids will be unique
         int requestCode = item.getId();
