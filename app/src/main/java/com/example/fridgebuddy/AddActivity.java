@@ -97,7 +97,7 @@ public class AddActivity extends AppCompatActivity {
 
                 // the date is for testing
                 // needs to be changed to the date given from spinners
-                util.addItem(AddActivity.this, itemDB, name, "11/20/2023");
+                util.addItem(AddActivity.this, itemDB, null, null, name, "11/20/2023");
 
                 editText.setText("");
             }

@@ -2,13 +2,11 @@ package com.example.fridgebuddy.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.fridgebuddy.database.CatalogItem;
@@ -16,6 +14,7 @@ import com.example.fridgebuddy.database.CatalogItemDatabase;
 import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.database.Item;
 import com.example.fridgebuddy.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
@@ -27,13 +26,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-
 /**
  * Class to hold utilities used throughout the app.
  */
 public class Util extends Application {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Item scannedItem;
+    private final ReminderUtil reminderUtil = new ReminderUtil();
 
     // Changed so the scan method can accept an instance of any activity -SM
     /**
@@ -72,29 +70,7 @@ public class Util extends Application {
             // format barcodeValue to a string we can use
             String barcodeValue = String.format(barcode.getDisplayValue());
 
-            // get data on diff thread than main, may lock up ui
-            executor.execute(() -> {
-                CatalogItem catalogItem = catalogDB.catalogItemDao().getCatalogItemByUPC(barcodeValue);
-
-                if (catalogItem != null) {
-                    // set expiration date
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DAY_OF_MONTH, catalogItem.getDaysUntilExp());
-                    Date expirationDate = calendar.getTime();
-
-                    // test = new Item("199901294", "Test",
-                    scannedItem = new Item(barcodeValue, catalogItem.getName(), expirationDate, catalogItem.getImageBytes());
-                    itemDB.itemDao().upsertItem(scannedItem);
-
-                    // set reminder for the item
-                    setReminder(activity.getApplicationContext(), scannedItem);
-
-                    // Post a Runnable to the UI thread to display the Toast message
-                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), scannedItem.getName() + " with UPC of " + barcodeValue + " has been added.", Toast.LENGTH_LONG).show());
-                } else {
-                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), "Unable to scan.", Toast.LENGTH_LONG).show());
-                }
-            });
+            addItem(activity, itemDB, catalogDB, barcodeValue, null, null);
         }
     }
 
@@ -120,39 +96,54 @@ public class Util extends Application {
     }
 
 
-    /**
-     * Add an Item without using the barcode scanner,
-     * made for items that we don't have in our catalog_items.db.
-     * Allows users to create their own items that we didn't account for
-     * @param activity passes activity to allow the Toast to be shown
-     * @param itemDB give the database that you want to access, in our case it will almost always be the AppDatabase
-     * @param name name of item given
-     * @param dateString date of expiration, needs to be a String datatype, will be parsed to a Date
-     */
-    public void addItem(Activity activity, ItemDatabase itemDB, String name, String dateString) {
-        // convert string to date
-        Date date = Converters.stringToDate(dateString);
+    public void addItem(Activity activity, ItemDatabase itemDB, CatalogItemDatabase catalogDB, String upc, String name, String dateString) {
+        executor.execute(() -> {
+            Item item = null;
 
-        // items must have a valid date and name. If the parsing comes back incorrectly the item cannot be added
-        if (date != null && !name.isEmpty() && !name.trim().isEmpty()) {
-            // create new Item
-            Item item = new Item(null, name, date, null);
+            // are we searching the catalogDB or not
+            if (catalogDB != null) {
+                // was the upc scanned in the database?
+                CatalogItem catalogItem = catalogDB.catalogItemDao().getCatalogItemByUPC(upc);
 
-            // add to database
-            executor.execute(() -> {
-                itemDB.itemDao().upsertItem(item);
+                // if it was
+                if (catalogItem != null) {
+                    // set expiration date from the daysUntilExp variable the item has stored
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DAY_OF_MONTH, catalogItem.getDaysUntilExp());
+                    Date expirationDate = calendar.getTime();
 
-                // set reminder
-                setReminder(activity.getApplicationContext(), item);
+                    // create a new scannedItem from the values we received from the catalog
+                    item = new Item(upc, catalogItem.getName(), expirationDate, catalogItem.getImageBytes());
+                } else {
+                    activity.runOnUiThread(() -> showSnackbar(activity, "Item cannot be scanned", itemDB, null, false));
+                }
+            } else {
+                // convert date from String to Date
+                Date date = Converters.stringToDate(dateString);
 
-                // display a toast to let the user know item has been added
-                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), name  + " has been added.", Toast.LENGTH_LONG).show());
-            });
-        } else if (date == null) {
-            Toast.makeText(activity.getApplicationContext(), "The date entered was invalid", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(activity.getApplicationContext(), "Please enter a valid name", Toast.LENGTH_SHORT).show();
-        }
+                // if name and date are not empty or null then make the item and add it
+                if (date != null && !name.isEmpty() && !name.trim().isEmpty()) {
+                    // create new Item
+                    item = new Item(null, name, date, null);
+                } else if (date == null) {
+                    activity.runOnUiThread(() -> showSnackbar(activity, "The date entered was invalid", itemDB, null, false));
+                } else {
+                    activity.runOnUiThread(() -> showSnackbar(activity, "Please enter a valid name", itemDB, null, false));
+                }
+            }
+
+            // add the item to the itemDB and set a reminder for it
+            if (item != null) {
+                final Item itemWithId = itemDB.itemDao().upsertAndGet(item);
+
+                reminderUtil.setReminder(activity.getApplicationContext(), itemWithId);
+
+                activity.runOnUiThread(() -> showSnackbar(activity, itemWithId.getName() + " added",itemDB, itemWithId, true));
+            } else {
+                Log.d("NULL", "addItem had a null item");
+            }
+
+        });
     }
 
     /**
@@ -163,77 +154,36 @@ public class Util extends Application {
      */
     public void deleteItem(Context context, ItemDatabase itemDB, Item item) {
         // cancel alarm
-        cancelReminder(context, item);
+        reminderUtil.cancelReminder(context, item);
 
         // remove item from the ItemDatabase
-        itemDB.itemDao().deleteItem(item);
+        // new thread to not lock up UI
+        executor.execute(() -> itemDB.itemDao().deleteItem(item));
+
     }
 
     /**
-     * this function will set the reminder for the product currently being added/scanned
-     * we are passing the Intent to send data to the AlarmReceiver class. The request code is out unique id will ensure that only one reminder
-     * will be made per item and allows us to cancel specific item's
-     * @param context context where the alarm will be set. This should be set to application context in our case since we want this to go off even if the app is not open.
-     * @param item the item the alarm should be set for
+     * create and show undo snackbar
+     * @param text what should display on the snackbar
+     * @param undo should the undo action be available
      */
-    public void setReminder(Context context, Item item) {
-        // set the reminder to go off at 10am on the date the item is set to expire
-        // extract the date from the item expDate
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(item.getExpDate());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private void showSnackbar(Activity activity, String text, ItemDatabase itemDB, Item scannedItem, Boolean undo) {
+        // Use the root view of the activity as the parent
+        View parentView = activity.findViewById(android.R.id.content);
 
-        // Set the alarm time to 10 AM the day before it expires
-        calendar.set(year, month, (day - 1), 10, 0, 0);
+        // create and show the Snackbar
+        Snackbar snackbar = Snackbar.make(parentView, text, Snackbar.LENGTH_LONG);
 
-        // create new AlarmManager service
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        View snackbarView = snackbar.getView();
 
-        // intent that triggers on alarm
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        int marginInPixels = Converters.dpToPixels(activity.getApplicationContext(), 4);
 
-        // pass the item name and exp date into the intent
-        intent.putExtra("ITEM_NAME", item.getName());
+        snackbarView.setPadding(marginInPixels, marginInPixels, marginInPixels, marginInPixels);
 
-        // unique request code. All item ids will be unique
-        int requestCode = item.getId();
-
-        // will be set off when alarm is triggered
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        // Set the alarm to the specified date and time
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-
-            Log.e("Reminder", "SecurityException: " + e.getMessage());
+        if (undo) {
+            snackbar.setAction("Undo", v -> deleteItem(activity.getApplicationContext(), itemDB, scannedItem));
         }
-    }
 
-    /**
-     * cancels an item's reminder, all variables should be the same as when setting. The AlarmManager can identify the reminder by these variables.
-     * @param context provide context that the reminder resides in. Like setReminder(), this should be application since we want all reminders to go off when app is closed.
-     * @param item item that reminder needs to be canceled
-     */
-    public void cancelReminder(Context context, Item item) {
-        // get intent and request code
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        int requestCode = item.getId();
-
-        //
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        // cancel if it exists
-        if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
-        }
+        snackbar.setBackgroundTint(Color.DKGRAY).setActionTextColor(R.drawable.green_two).show();
     }
 }

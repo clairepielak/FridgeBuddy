@@ -1,6 +1,7 @@
 package com.example.fridgebuddy.util;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -53,5 +54,10 @@ public class Converters {
     @TypeConverter
     public static Bitmap toBitmap(byte[] byteArray) {
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    }
+
+    public static int dpToPixels(Context context, int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }
