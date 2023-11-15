@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface ItemDao {
     @Upsert
-    Long upsertItem(Item... item);
+    Long upsertItem(Item item);
 
     @Query("SELECT * FROM user_items WHERE id = :itemId")
     Item getItem(long itemId);
