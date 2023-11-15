@@ -2,6 +2,7 @@ package com.example.fridgebuddy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +28,10 @@ public class AddActivity extends AppCompatActivity {
     private ItemDatabase itemDB;
     private CatalogItemDatabase catalogDB;
 
+    // Map to store month names and their corresponding numerical values
+    private Map<String, String> monthMap;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +41,16 @@ public class AddActivity extends AppCompatActivity {
         util = new Util();
         itemDB = ItemDatabase.getDatabase(getApplicationContext());
         catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
+
+        // Retrieve month values from resources
+        String[] monthValues = getResources().getStringArray(R.array.month_values);
+
+        // Create a map of month names to numerical values
+        monthMap = new HashMap<>();
+        String[] monthNames = getResources().getStringArray(R.array.month_name);
+        for (int i = 0; i < monthNames.length && i < monthValues.length; i++) {
+            monthMap.put(monthNames[i], monthValues[i]);
+        }
 
         // Connects the add_layout.xml to the activity
         setContentView(R.layout.add_layout);
@@ -85,21 +102,45 @@ public class AddActivity extends AppCompatActivity {
         // Add the button for saving and redirecting to the MainActivity
         Button saveButton = findViewById(R.id.save);
 
+        // Add the button for scanning barcodes
         Button scanBarcode = findViewById(R.id.scanBarcode);
         scanBarcode.setOnClickListener(view -> util.scan(AddActivity.this, itemDB, catalogDB));
 
+        TextInputLayout nameTextInputLayout = findViewById(R.id.productNameEditText);
+        EditText nameEditText = nameTextInputLayout.getEditText();
+
+
         saveButton.setOnClickListener(view -> {
             // Will insert code for saving the values the user inputs to the db -SM
+
+            // Retrieve the selected values from the spinners
+            String selectedDay = daySpinner.getSelectedItem().toString();
+            String selectedMonth = monthSpinner.getSelectedItem().toString();
+            String selectedYear = yearSpinner.getSelectedItem().toString();
+
             TextInputLayout textLayout = findViewById(R.id.productNameEditText);
             EditText editText = textLayout.getEditText();
-            if (editText != null) {
-                String name = editText.getText().toString();
+            TextInputLayout quantityTextInputLayout = findViewById(R.id.quantityEditText);
+            EditText quantityEditText = quantityTextInputLayout.getEditText();
 
-                // the date is for testing
-                // needs to be changed to the date given from spinners
-                util.addItem(AddActivity.this, itemDB, name, "11/20/2023");
+            if (nameEditText != null && quantityEditText != null) {
+                String name = nameEditText.getText().toString();
+                String quantity = quantityEditText.getText().toString();
 
-                editText.setText("");
+                // Combine the selected values to form the date string
+                String dateString = String.format("%02d/%s/%s", Integer.parseInt(monthMap.get(selectedMonth)), selectedDay, selectedYear);
+
+                // Call the util.addItem method with the retrieved values
+                util.addItem(AddActivity.this, itemDB, name, dateString);
+
+                // Add debug logs to check the values
+                Log.d("AddActivity", "Name: " + name);
+                Log.d("AddActivity", "Quantity: " + quantity);
+                Log.d("AddActivity", "Date String: " + dateString);
+
+                // Clear the text fields
+                nameEditText.setText("");
+                quantityEditText.setText("");
             }
 
 
