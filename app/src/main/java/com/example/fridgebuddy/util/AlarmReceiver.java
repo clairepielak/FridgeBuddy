@@ -6,9 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.fridgebuddy.R;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -16,9 +14,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // get name and exp date values from the intent.extras we feed
         String itemName = intent.getStringExtra("ITEM_NAME");
-        String expDate = intent.getStringExtra("EXP_DATE");
 
-        showNotification(context, itemName + " is about to expire.", "Remember to use " + itemName + " before it expires on " + expDate + "!");
+        showNotification(context, "Your " + itemName.toLowerCase() + " is about to expire.", "Remember to use your " + itemName.toLowerCase() + " before it expires tomorrow!");
     }
 
     private void showNotification(Context context, String title, String message) {
