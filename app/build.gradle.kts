@@ -54,10 +54,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("androidx.navigation:navigation-fragment:2.7.4")
-    implementation("androidx.navigation:navigation-ui:2.7.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.activity:activity-compose:1.8.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -74,11 +74,19 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // -ZL
-    implementation ("com.google.android.material:material:1.1.0")
+    implementation ("com.google.android.material:material:1.10.0")
 
     // Dependencies for barcode scanning
     // -ZL
     // ML Kit Barcode scanner
-    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:16.1.2")
+    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+
+    // Room
+    val room_version = "2.6.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
 }

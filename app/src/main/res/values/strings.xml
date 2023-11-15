@@ -18,6 +18,57 @@
     <string name="scan_barcode">Scan Barcode</string>
     <string name="title_activity_scan">ScanActivity</string>
 
+    <!-- Array for each day of the month (1-31) -SM -->
+    <string-array name="day_number">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+
+    <!-- Array for each month in a year -SM -->
+    <string-array name="month_name">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
 
     <!-- Zack Test -->
     <string name="barcode_result" translatable="false">Barcode detected.\n%1$s</string>
@@ -25,17 +76,24 @@
     <string name="error_camera_permission_not_granted" translatable="false">Camera permission is not granted.</string>
     <string name="error_app_name_unavailable" translatable="false">App name is not set.</string>
     <string name="error_default_message" translatable="false">Failed to scan code: %1$s</string>
+    <string name="home">Home</string>
+    <string name="scan_barcode1">Scan Barcode</string>
+    <string name="scan_barcode2">Scan Barcode</string>
+    <string name="quantity">Quantity</string>
+    <string name="product_name">Product Name</string>
+    <string name="or_enter_manually">Or enter manually</string>
+    <string name="month">Month</string>
+    <string name="notification_permission_message">Notifications allow us to remind you when your food is nearing its expiration date</string>
 
-\\claire add
-<string-array name="food_item_name">
-    <item>Bread</item>
-    <item>Milk</item>
-    <item>Peach</item>
-    <item>Hot Dogs</item>
-    <item>Cookies</item>
-    <item>Brie Cheese</item>
-
-</string-array>
+    <!-- claire add -->
+    <string-array name="food_item_name">
+        <item>Bread</item>
+        <item>Milk</item>
+        <item>Peach</item>
+        <item>Hot Dogs</item>
+        <item>Cookies</item>
+        <item>Brie Cheese</item>
+    </string-array>
 
     <string-array name="month_expiry_date">
     <item>12</item>
@@ -76,11 +134,10 @@
         <item>02</item>
         <item>01</item>
     </integer-array>
-<integer-array name="quantity">
-    <item>1</item>
-<item>2</item>
-
-</integer-array>
+    <integer-array name="quantity">
+        <item>1</item>
+        <item>2</item>
+    </integer-array>
 
 </resources>
 

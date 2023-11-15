@@ -9,7 +9,9 @@ public class ShoppingListViewModel extends ViewModel {
 
     public ShoppingListViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Shopping List Page");
+
+        //In case we do not use this page yet
+        mText.setValue("Coming soon...");
     }
 
     public ShoppingListViewModel(MutableLiveData<String> mText) {
