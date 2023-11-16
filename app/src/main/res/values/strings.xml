@@ -84,6 +84,9 @@
     <string name="or_enter_manually">Or enter manually</string>
     <string name="month">Month</string>
     <string name="notification_permission_message">Notifications allow us to remind you when your food is nearing its expiration date</string>
+    <string name="new_item">New Item</string>
+    <string name="add_new_item">Add New Item</string>
+    <string name="title">Title</string>
 
     <!-- claire add -->
     <string-array name="food_item_name">
