@@ -41,6 +41,8 @@ public class Util extends Application {
      * @param catalogDB allows us to read the data from the CatalogItemDatabase
      */
     public void scan(Activity activity, ItemDatabase itemDB, CatalogItemDatabase catalogDB) {
+        Context appContext = activity.getApplicationContext();
+
         /*
           create a new instance of the options and barcode scanner and build it, can use this to change
           options in the future if we want or change the context that the barcode is running in
@@ -56,8 +58,8 @@ public class Util extends Application {
         gmsBarcodeScanner
                 .startScan()
                 .addOnSuccessListener(barcode -> scanSuccessful(barcode, itemDB, catalogDB, activity))
-                .addOnFailureListener(e -> getErrorMessage(e, activity))
-                .addOnCanceledListener(() -> Toast.makeText(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.error_scanner_cancelled), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> getErrorMessage(e, appContext))
+                .addOnCanceledListener(() -> Toast.makeText(appContext, appContext.getString(R.string.error_scanner_cancelled), Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -78,25 +80,27 @@ public class Util extends Application {
      * If an exception is thrown while trying to scan barcodes
       */
     @SuppressLint("SwitchIntDef")
-    private void getErrorMessage(Exception e, Activity activity) {
+    private void getErrorMessage(Exception e, Context appContext) {
         if (e instanceof MlKitException) {
             switch (((MlKitException) e).getErrorCode()) {
                 case MlKitException.PERMISSION_DENIED:
-                    Toast.makeText(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.error_camera_permission_not_granted), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(appContext, appContext.getString(R.string.error_camera_permission_not_granted), Toast.LENGTH_SHORT).show();
                     return;
                 case MlKitException.UNAVAILABLE:
-                    Toast.makeText(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.error_app_name_unavailable), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(appContext, appContext.getString(R.string.error_app_name_unavailable), Toast.LENGTH_SHORT).show();
                     return;
                 default:
-                    Toast.makeText(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.error_default_message, e), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(appContext, appContext.getString(R.string.error_default_message, e), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(activity.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(appContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
 
     public void addItem(Activity activity, ItemDatabase itemDB, CatalogItemDatabase catalogDB, String upc, String name, String dateString) {
+        Context appContext = activity.getApplicationContext();
+
         executor.execute(() -> {
             Item item = null;
 
@@ -113,9 +117,9 @@ public class Util extends Application {
                     Date expirationDate = calendar.getTime();
 
                     // create a new scannedItem from the values we received from the catalog
-                    item = new Item(upc, catalogItem.getName(), expirationDate, catalogItem.getImageBytes());
+                    item = new Item(upc, catalogItem.getName(), expirationDate, catalogItem.getImageDestination());
                 } else {
-                    activity.runOnUiThread(() -> showSnackbar(activity, "Item cannot be scanned", itemDB, null, false));
+                    activity.runOnUiThread(() -> Toast.makeText(appContext, "Item cannot be scanned", Toast.LENGTH_SHORT).show());
                 }
             } else {
                 // convert date from String to Date
@@ -126,9 +130,9 @@ public class Util extends Application {
                     // create new Item
                     item = new Item(null, name, date, null);
                 } else if (date == null) {
-                    activity.runOnUiThread(() -> showSnackbar(activity, "The date entered was invalid", itemDB, null, false));
+                    activity.runOnUiThread(() -> Toast.makeText(appContext, "The date entered was invalid", Toast.LENGTH_SHORT).show());
                 } else {
-                    activity.runOnUiThread(() -> showSnackbar(activity, "Please enter a valid name", itemDB, null, false));
+                    activity.runOnUiThread(() -> Toast.makeText(appContext, "Please enter a valid name", Toast.LENGTH_SHORT).show());
                 }
             }
 
@@ -138,7 +142,7 @@ public class Util extends Application {
 
                 reminderUtil.setReminder(activity.getApplicationContext(), itemWithId);
 
-                activity.runOnUiThread(() -> showSnackbar(activity, itemWithId.getName() + " added",itemDB, itemWithId, true));
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(), itemWithId.getName() + " added", Toast.LENGTH_SHORT).show());
             } else {
                 Log.d("NULL", "addItem had a null item");
             }
