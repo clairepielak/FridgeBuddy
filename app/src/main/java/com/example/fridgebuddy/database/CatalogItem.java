@@ -12,21 +12,23 @@ public class CatalogItem {
     @ColumnInfo(name = "upc")
     private String upc;
 
+    @NonNull
     private String name;
 
+    @NonNull
     private int daysUntilExp;
 
-    private byte[] imageBytes;
+    private String imageDestination;
 
     // setters/getters
     public void setUpc(@NonNull String upc) { this.upc = upc; }
-    public void setName(String name) { this.name = name; }
-    public void setDaysUntilExp(int daysUntilExp) { this.daysUntilExp = daysUntilExp; }
-    public void setImageBytes(byte[] imageBytes) { this.imageBytes = imageBytes; }
+    public void setName(@NonNull String name) { this.name = name; }
+    public void setDaysUntilExp(@NonNull int daysUntilExp) { this.daysUntilExp = daysUntilExp; }
+    public void setImageDestination(String imageDestination) { this.imageDestination = imageDestination; }
 
     @NonNull
     public String getUpc() { return upc; }
     public String getName() { return name; }
     public int getDaysUntilExp() { return daysUntilExp; }
-    public byte[] getImageBytes() { return imageBytes; }
+    public String getImageDestination() { return imageDestination; }
 }

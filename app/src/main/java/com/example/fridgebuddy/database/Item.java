@@ -21,15 +21,15 @@ public class Item {
     @ColumnInfo(name = "exp_date")
     private Date expDate;
 
-    @ColumnInfo(name = "imageBytes", typeAffinity = ColumnInfo.BLOB)
-    private byte[] imageBytes;
+    @ColumnInfo(name = "imageDestination")
+    private String imageDestination;
 
     // user scanned, upc given
-    public Item(String upc, String name, Date expDate, byte[] imageBytes) {
+    public Item(String upc, String name, Date expDate, String imageDestination) {
         this.upc = upc;
         this.name = name;
         this.expDate = expDate;
-        this.imageBytes = imageBytes;
+        this.imageDestination = imageDestination;
     }
 
     // setters/getters
@@ -37,11 +37,11 @@ public class Item {
     public void setUpc(String upc) { this.upc = upc; }
     public void setName(String name) { this.name = name; }
     public void setExpDate(Date expDate) { this.expDate = expDate; }
-    public void setImageBytes(byte[] imageBytes) { this.imageBytes = imageBytes; }
+    public void setImageDestination(String imageDestination) { this.imageDestination = imageDestination; }
 
     public int getId() { return id; }
     public String getUpc() { return upc; }
     public String getName() { return name; }
     public Date getExpDate() { return expDate; }
-    public byte[] getImageBytes() { return imageBytes; }
+    public String getImageDestination() { return imageDestination; }
 }
