@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_inventory" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_scanner"
         android:name="com.example.fridgebuddy.ui.ScanBarcode.ScanBarcodeFragment"
         android:label="Scan Barcode"
         tools:layout="@layout/fragment_scanbarcode" />

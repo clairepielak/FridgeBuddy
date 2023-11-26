@@ -4,21 +4,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
 public class ShoppingListViewModel extends ViewModel {
-    private final MutableLiveData<String> mText;
+    private MutableLiveData<List<Groceries>> groceriesListLiveData = new MutableLiveData<>();
 
-    public ShoppingListViewModel() {
-        mText = new MutableLiveData<>();
-
-        //In case we do not use this page yet
-        mText.setValue("Coming soon...");
+    public LiveData<List<Groceries>> getGroceriesListLiveData() {
+        return groceriesListLiveData;
     }
 
-    public ShoppingListViewModel(MutableLiveData<String> mText) {
-        this.mText = mText;
-    }
-
-    public LiveData<String> getText() {
-        return mText;
+    public void setGroceriesList(List<Groceries> groceriesList) {
+        groceriesListLiveData.setValue(groceriesList);
     }
 }
+

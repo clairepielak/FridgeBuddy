@@ -8,7 +8,11 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.example.fridgebuddy.util.Converters;
 
-@Database(entities = {Item.class}, version = 3, exportSchema = false)
+@Database(
+        entities = { Item.class },
+        version = 4,
+        exportSchema = false
+)
 @TypeConverters(Converters.class)
 public abstract class ItemDatabase extends RoomDatabase {
     private static ItemDatabase INSTANCE;
