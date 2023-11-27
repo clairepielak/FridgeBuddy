@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
@@ -13,7 +13,7 @@
         android:title="@string/inventory" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_scanner"
         android:icon="@drawable/icons8_barcode_scanner_64"
         android:title="@string/scan_barcode" />
     <item

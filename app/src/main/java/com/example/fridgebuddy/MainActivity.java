@@ -20,9 +20,6 @@ import com.example.fridgebuddy.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button scanMove;
-    private ActivityMainBinding binding;
-
     private Util util;
     private ItemDatabase itemDB;
     private CatalogItemDatabase catalogDB;
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.fridgebuddy.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // initialize util method and database
@@ -47,13 +44,22 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.navigation_ShoppingList)
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_scanner, R.id.navigation_ShoppingList)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        scanMove=findViewById(R.id.scannow);
+        // use the scan function rather than go to the fragment
+        navView.getMenu().findItem(R.id.navigation_scanner)
+                .setOnMenuItemClickListener(menuItem -> {
+                    util.scan(MainActivity.this, itemDB, catalogDB);
+
+                    // close out of the fragment
+                    return true;
+                });
+
+        Button scanMove = findViewById(R.id.scannow);
         scanMove.setOnClickListener(v -> util.scan(MainActivity.this, itemDB, catalogDB));
     }
 }
