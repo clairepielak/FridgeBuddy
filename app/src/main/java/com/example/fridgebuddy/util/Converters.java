@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Converters {
     // date converters
@@ -25,13 +26,20 @@ public class Converters {
     }
 
     @TypeConverter
-    public static String dateToString(Date date) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy");
+    public static String dateToMonthDay(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        // Define the desired format, e.g., "MMM dd" (abbreviated month name and day)
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
+
+        // Format the date to a string
         return sdf.format(date);
     }
 
     @TypeConverter
+    @SuppressLint("SimpleDateFormat")
     public static Date stringToDate(String dateString) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
