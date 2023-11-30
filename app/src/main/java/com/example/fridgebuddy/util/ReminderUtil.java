@@ -61,7 +61,7 @@ public class ReminderUtil {
     }
 
     /**
-     * cancels an item's reminder, all variables should be the same as when setting. The AlarmManager can identify the reminder by these variables.
+     * cancels an item's reminder, all parameter should be the same as when setting. This makes it so the reminder can be found by the AlarmManager
      * @param context provide context that the reminder resides in. Like setReminder(), this should be application since we want all reminders to go off when app is closed.
      * @param item item that reminder needs to be canceled
      */
