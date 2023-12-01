@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Upsert;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -35,4 +36,7 @@ public interface ItemDao {
 
     @Query("SELECT * FROM user_items ORDER BY exp_date ASC")
     LiveData<List<Item>> orderItemByExpDate();
+
+    @Query("SELECT * FROM user_items WHERE exp_date <= :fiveDaysFromNow")
+    LiveData<List<Item>> getItemsWithinNext5Days(Date fiveDaysFromNow);
 }

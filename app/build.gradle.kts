@@ -76,6 +76,9 @@ dependencies {
     // -ZL
     implementation ("com.google.android.material:material:1.10.0")
 
+    // -SM
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
     // Dependencies for barcode scanning
     // -ZL
     // ML Kit Barcode scanner
