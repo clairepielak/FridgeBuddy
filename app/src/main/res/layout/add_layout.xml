@@ -147,7 +147,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/quantityEditText"
+                android:id="@+id/upcEditText"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="389dp"
                 android:layout_height="78dp"
@@ -161,7 +161,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/vidaloka"
-                    android:hint="@string/quantity"
+                    android:hint="@string/upc"
                     android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>

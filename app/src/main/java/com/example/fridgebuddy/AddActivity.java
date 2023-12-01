@@ -8,19 +8,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.fridgebuddy.database.CatalogItemDatabase;
+import com.example.fridgebuddy.database.Item;
 import com.example.fridgebuddy.database.ItemDatabase;
 import com.example.fridgebuddy.util.Util;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -28,8 +34,47 @@ public class AddActivity extends AppCompatActivity {
     private ItemDatabase itemDB;
     private CatalogItemDatabase catalogDB;
 
+    // Function to save an item to the database in a separate thread
+    private boolean saveItemToDatabase(Item item) {
+        try {
+            new Thread(() -> itemDB.itemDao().upsertItem(item)).start();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Function to show a Toast message
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // Function to generate a random UPC for an item
+    private String generateRandomUPC() {
+        Random random = new Random();
+        StringBuilder upcBuilder = new StringBuilder();
+
+        // Generate 8 random digits
+        for (int i = 0; i < 8; i++) {
+            upcBuilder.append(random.nextInt(10));
+        }
+
+        return upcBuilder.toString();
+    }
+
     // Map to store month names and their corresponding numerical values
     private Map<String, String> monthMap;
+
+    // Function to check if a string contains a number
+    private boolean containsNumber(String input) {
+        for (char character : input.toCharArray()) {
+            if (Character.isDigit(character)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     @Override
@@ -41,6 +86,7 @@ public class AddActivity extends AppCompatActivity {
         util = new Util();
         itemDB = ItemDatabase.getDatabase(getApplicationContext());
         catalogDB = CatalogItemDatabase.getDatabase(getApplicationContext());
+
 
         // Retrieve month values from resources
         String[] monthValues = getResources().getStringArray(R.array.month_values);
@@ -99,6 +145,7 @@ public class AddActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+
         // Add the button for saving and redirecting to the MainActivity
         Button saveButton = findViewById(R.id.save);
 
@@ -109,45 +156,51 @@ public class AddActivity extends AppCompatActivity {
         TextInputLayout nameTextInputLayout = findViewById(R.id.productNameEditText);
         EditText nameEditText = nameTextInputLayout.getEditText();
 
+        TextInputLayout upcTextInputLayout = findViewById(R.id.upcEditText);
+        EditText upcEditText = upcTextInputLayout.getEditText();
 
+        // OnClickListener for the save button -SM
         saveButton.setOnClickListener(view -> {
-            // Will insert code for saving the values the user inputs to the db -SM
 
-            // Retrieve the selected values from the spinners
+            // Retrieve values from Spinners and TextViews
             String selectedDay = daySpinner.getSelectedItem().toString();
             String selectedMonth = monthSpinner.getSelectedItem().toString();
             String selectedYear = yearSpinner.getSelectedItem().toString();
+            String itemName = nameEditText.getText().toString();
+            String upcValue = upcEditText.getText().toString();
 
-            TextInputLayout textLayout = findViewById(R.id.productNameEditText);
-            EditText editText = textLayout.getEditText();
-            TextInputLayout quantityTextInputLayout = findViewById(R.id.quantityEditText);
-            EditText quantityEditText = quantityTextInputLayout.getEditText();
+            // Check if a valid name is inserted and does not contain a number
+            if (itemName.trim().isEmpty() || containsNumber(itemName)) {
+                // Display an error message and do not proceed
+                showToast("Please insert a valid name");
+                return;
+            }
 
-            if (nameEditText != null && quantityEditText != null) {
-                String name = nameEditText.getText().toString();
-                String quantity = quantityEditText.getText().toString();
+            // If UPC is not entered, generate a random one
+            if (upcValue.trim().isEmpty()) {
+                upcValue = generateRandomUPC();
+            }
 
-                // Combine the selected values to form the date string
-                String dateString = String.format("%02d/%s/%s", Integer.parseInt(monthMap.get(selectedMonth)), selectedDay, selectedYear);
+            // Convert date values to a Date object
+            calendar.set(Integer.parseInt(selectedYear), Arrays.asList(getResources().getStringArray(R.array.month_name)).indexOf(selectedMonth), Integer.parseInt(selectedDay));
+            Date selectedDate = calendar.getTime();
 
-                // Call the util.addItem method with the retrieved values
-                util.addItem(AddActivity.this, itemDB, name, dateString);
+            // Create an Item object
+            Item newItem = new Item(upcValue, itemName, selectedDate, "");
 
-                // Add debug logs to check the values
-                Log.d("AddActivity", "Name: " + name);
-                Log.d("AddActivity", "Quantity: " + quantity);
-                Log.d("AddActivity", "Date String: " + dateString);
-
-                // Clear the text fields
-                nameEditText.setText("");
-                quantityEditText.setText("");
+            // Save the item to the database
+            if (saveItemToDatabase(newItem)) {
+                showToast("Item saved");
+            } else {
+                showToast("Could not save item");
             }
 
 
-            // Redirect to InventoryFragment
+            // Redirect to Home
             Intent intent = new Intent(AddActivity.this, MainActivity.class);
             startActivity(intent);
         });
+
     }
 
     @Override
