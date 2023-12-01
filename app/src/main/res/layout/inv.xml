@@ -2,31 +2,30 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:cardBackgroundColor="@color/lightgrey"
         app:cardCornerRadius="20dp"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="81dp"
+            android:layout_height="match_parent"
             android:elevation="8dp"
             android:padding="1dp"
             android:paddingStart="1dp"
             android:paddingLeft="1dp"
-            android:paddingTop="1dp"
+            android:paddingTop="2dp"
             android:paddingEnd="1dp"
             android:paddingRight="1dp"
-            android:paddingBottom="1dp">
+            android:paddingBottom="2dp">
 
 
             <!-- android:src="@tools:sample/avatars"
@@ -64,22 +63,7 @@
                 app:layout_constraintVertical_bias="0.583" />
 
             <TextView
-                android:id="@+id/textView6"
-                android:layout_width="81dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="150dp"
-                android:fontFamily="@font/vidaloka"
-                android:text="Quantity: 4"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.552"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.492" />
-
-            <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/exp_date"
                 android:layout_width="120dp"
                 android:layout_height="19dp"
                 android:layout_marginTop="24dp"
@@ -94,20 +78,18 @@
                 app:layout_constraintVertical_bias="0.555" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/remove_btn"
                 android:layout_width="67dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="29dp"
                 android:layout_marginBottom="27dp"
                 android:background="#00FFFFFF"
-                android:src="@drawable/baseline_delete_outline_24"
                 android:contentDescription="imageButton2"
-                app:tint="#8E8B8B"
+                android:src="@drawable/baseline_delete_outline_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#8E8B8B" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
