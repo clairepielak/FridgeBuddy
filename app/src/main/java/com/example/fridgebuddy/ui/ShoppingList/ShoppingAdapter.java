@@ -3,6 +3,8 @@ package com.example.fridgebuddy.ui.ShoppingList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -44,16 +46,35 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
 
         private TextView titleTextView;
         private NumberPicker quantityTextView;
+        private Button rmItemButton;
 
         public GroceriesViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.tvTitle);
+            rmItemButton = itemView.findViewById(R.id.rmButton);
             quantityTextView = itemView.findViewById(R.id.quantity);
+
+            quantityTextView.setMinValue(1);
+            quantityTextView.setMaxValue(10);
+
+            rmItemButton.setOnClickListener(v -> {
+                int clickedPosition = getAdapterPosition();
+                if (clickedPosition != RecyclerView.NO_POSITION) {
+                    removeItem(clickedPosition);
+                }
+            });
         }
 
         public void bind(Groceries groceries) {
             titleTextView.setText(groceries.getTitle());
             quantityTextView.setValue(groceries.getQuantity());
+        }
+
+        public void removeItem(int position) {
+            if (position >= 0 && position < items.size()) {
+                items.remove(position);
+                notifyItemRemoved(position);
+            }
         }
     }
 }
