@@ -19,11 +19,9 @@ import com.example.fridgebuddy.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private Util util;
     private ItemDatabase itemDB;
     private CatalogItemDatabase catalogDB;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        // use the scan function rather than go to the fragment
+        // use the scan function rather than go to the scanner fragment
         navView.getMenu().findItem(R.id.navigation_scanner)
                 .setOnMenuItemClickListener(menuItem -> {
                     util.scan(MainActivity.this, itemDB, catalogDB);
