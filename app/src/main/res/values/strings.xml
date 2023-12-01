@@ -103,6 +103,9 @@
     <string name="new_item">New Item</string>
     <string name="add_new_item">Add New Item</string>
     <string name="title">Title</string>
+    <string name="itemtitle">ItemTitle</string>
+    <string name="add">ADD</string>
+    <string name="x">X</string>
 
     <!-- claire add -->
     <string-array name="food_item_name">
