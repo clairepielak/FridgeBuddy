@@ -27,6 +27,9 @@ public interface ItemDao {
     @Delete
     void deleteItem(Item item);
 
+    @Query("SELECT * FROM user_items ORDER BY id ASC LIMIT 2")
+    LiveData<List<Item>> getTwoSmallestIdItems();
+
     @Query("SELECT * FROM user_items ORDER BY name ASC")
     LiveData<List<Item>> orderItemByName();
 
