@@ -1,7 +1,7 @@
 package com.example.fridgebuddy.ui.home;
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.util.Collections;
+import java.util.Comparator;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import com.example.fridgebuddy.AddActivity;
 import com.example.fridgebuddy.ItemViewModel;
 import com.example.fridgebuddy.database.CatalogItemDatabase;
@@ -31,9 +29,6 @@ import com.example.fridgebuddy.util.Util;
 
 // imports for Date -SM
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,22 +47,50 @@ public class HomeFragment extends Fragment {
     private ArrayAdapter<String> adapter;
     private ItemViewModel itemViewModel;
 
-    private View root;
+    // Method to retrieve items within the next 5 days and order them
+    // Keep track of items displayed in the ListView
+    private List<Item> displayedItems = new ArrayList<>();
 
-    // Method to retrieve items within the next 5 days
+    // Method to retrieve items within the next 5 days and order them
     private void observeItemsWithinNext5Days() {
         // Observe the LiveData in the ViewModel
-        itemViewModel.getItemsWithinNext5Days().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
-            @Override
-            public void onChanged(List<Item> items) {
-                // Convert the list of items to a list of display strings
-                List<String> displayStrings = generateDisplayStrings(items);
-
-                // Update the adapter with the new list of display strings
-                adapter.clear();
-                adapter.addAll(displayStrings);
-                adapter.notifyDataSetChanged();
+        itemViewModel.getItemsWithinNext5DaysOrdered().observe(getViewLifecycleOwner(), items -> {
+            // Order the items by expiration date
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Collections.sort(items, Comparator.comparing(Item::getExpDate));
             }
+
+            // Update the list of displayed items only if it's empty
+            if (displayedItems.isEmpty()) {
+                displayedItems.addAll(items);
+            }
+
+            if (!items.isEmpty()) {
+                // Get notification details
+                String notificationTitle = "Your " + items.get(0).getName().toLowerCase() + " is about to expire.";
+                String notificationMessage = "     Use before it expires!";
+
+                // Display the notification
+                TextView notif1TextView = getView().findViewById(R.id.Notif1);
+                notif1TextView.setText(notificationTitle + "\n\n " + notificationMessage);
+
+                TextView notif2TextView = getView().findViewById(R.id.Notif2);
+                notif2TextView.setText(""); // Clear the text if not needed
+            } else {
+                TextView notif1TextView = getView().findViewById(R.id.Notif1);
+                notif1TextView.setText("            All caught up!");
+
+                TextView notif2TextView = getView().findViewById(R.id.Notif2);
+                notif2TextView.setText(""); // Clear the text if not needed
+            }
+
+            // Convert the list of items to a list of display strings
+            List<String> displayStrings = generateDisplayStrings(items);
+
+            // Update the adapter with the new list of display strings
+            adapter.clear();
+            adapter.addAll(displayStrings);
+            adapter.notifyDataSetChanged();
         });
     }
 
@@ -172,14 +195,10 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main)
                     .navigate(R.id.navigation_dashboard, bundle);
         });
-
         // Call the method to observe items within the next 5 days
         observeItemsWithinNext5Days();
 
-        // Find the TextView with the ID "dayOfWeek" in the layout
         TextView dayOfWeekTextView = root.findViewById(R.id.dayOfWeek);
-
-        // Find the TextView with the ID "timeOfDay" in the layout
         TextView timeOfDayTextView = root.findViewById(R.id.monthAndDay);
 
         // Create a SimpleDateFormat to format the date to display the day of the week (EEEE)
@@ -200,10 +219,8 @@ public class HomeFragment extends Fragment {
         // Get the day of the month (as an integer) to determine the suffix
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-        // Determine the suffix based on the day of the month
+        // Determine and append the suffix based on the day of the month
         String dayOfMonthSuffix = getDayOfMonthSuffix(dayOfMonth);
-
-        // Append the suffix to the formatted month and day
         currentMonthAndDay = currentMonthAndDay + dayOfMonthSuffix;
 
         // Set the text of the month and day TextView -SM
@@ -242,7 +259,6 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AddActivity.class);
             startActivity(intent);
         });
-
         return root;
     }
 }

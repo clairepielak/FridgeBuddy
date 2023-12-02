@@ -29,6 +29,11 @@ public class ItemRepository {
         return itemDao.getItemsWithinNext5Days(fiveDaysFromNow);
     }
 
+    // Method to get LiveData for items within the next 5 days ordered by expiration date -SM
+    public LiveData<List<Item>> getItemsWithinNext5DaysOrdered() {
+        return itemDao.getItemsWithinNext5DaysOrdered(getFiveDaysFromNow());
+    }
+
     // Method to get a Date object representing 5 days from now -SM
     private Date getFiveDaysFromNow() {
         Calendar calendar = Calendar.getInstance();

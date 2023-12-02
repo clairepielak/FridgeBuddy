@@ -18,7 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         showNotification(context, "Your " + itemName.toLowerCase() + " is about to expire.", "Remember to use your " + itemName.toLowerCase() + " before it expires tomorrow!");
     }
 
-    private void showNotification(Context context, String title, String message) {
+    public static void showNotification(Context context, String title, String message) {
         String channel_id = "com.example.fridgebuddy.reminder_channel";
         String channel_name = "Reminder Channel";
 

@@ -24,10 +24,9 @@ public class ItemViewModel extends AndroidViewModel {
         repository = new ItemRepository(application);
         itemsWithinNext5Days = repository.getItemsWithinNext5Days(getFiveDaysFromNow());
     }
-
-    // Method to get LiveData for items within the next 5 days
-    public LiveData<List<Item>> getItemsWithinNext5Days() {
-        return itemsWithinNext5Days;
+    // Method to get LiveData for items within the next 5 days ordered by expiration date
+    public LiveData<List<Item>> getItemsWithinNext5DaysOrdered() {
+        return repository.getItemsWithinNext5DaysOrdered();
     }
 
     // Method to get a Date object representing 5 days from now -SM

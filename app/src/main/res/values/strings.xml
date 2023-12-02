@@ -107,6 +107,7 @@
     <string name="add">ADD</string>
     <string name="x">X</string>
     <string name="upc">UPC (optional)</string>
+    <string name="tracks_expiration_dates">Tracks expiration dates</string>
 
     <!-- claire add -->
     <string-array name="food_item_name">
