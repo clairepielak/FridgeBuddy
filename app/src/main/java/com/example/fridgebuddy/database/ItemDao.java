@@ -39,4 +39,7 @@ public interface ItemDao {
 
     @Query("SELECT * FROM user_items WHERE exp_date <= :fiveDaysFromNow ORDER BY exp_date ASC")
     LiveData<List<Item>> getItemsWithinNext5DaysOrdered(Date fiveDaysFromNow);
+
+    @Query("SELECT * FROM user_items ORDER BY exp_date ASC")
+    LiveData<List<Item>> orderItemByExpDate();
 }

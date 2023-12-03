@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fridgebuddy.R;
@@ -76,7 +77,16 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
 
         public void bind(Item item) {
             itemNameView.setText(item.getName());
-            expDateView.setText(Converters.dateToMonthDay(item.getExpDate()));
+
+            if (item.isExpired()) {
+                // If the item is expired, set the text to "Expired"
+                expDateView.setText("Expired");
+                expDateView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            } else {
+                // If the item is not expired, display the formatted expiration date
+                expDateView.setText(Converters.dateToMonthDay(item.getExpDate()));
+                expDateView.setTextColor(ContextCompat.getColor(context, R.color.black));
+            }
         }
 
         public Item getItem(int position) {

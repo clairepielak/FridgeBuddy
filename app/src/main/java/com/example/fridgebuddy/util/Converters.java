@@ -32,7 +32,7 @@ public class Converters {
         }
 
         // Define the desired format, e.g., "MMM dd" (abbreviated month name and day)
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
 
         // Format the date to a string
         return sdf.format(date);

@@ -8,6 +8,11 @@ import java.util.Date;
 
 @Entity(tableName = "user_items")
 public class Item {
+
+    public boolean isExpired() {
+        Date currentDate = new Date();
+        return expDate != null && expDate.before(currentDate);
+    }
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
