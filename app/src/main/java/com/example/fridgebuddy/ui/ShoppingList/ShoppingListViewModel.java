@@ -1,15 +1,23 @@
 package com.example.fridgebuddy.ui.ShoppingList;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-public class ShoppingListViewModel extends ViewModel {
+
+public class ShoppingListViewModel extends AndroidViewModel {
     private MutableLiveData<List<Groceries>> groceriesListLiveData = new MutableLiveData<>();
 
-    public LiveData<List<Groceries>> getGroceriesListLiveData() {
+    public ShoppingListViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    public MutableLiveData<List<Groceries>> getGroceriesListLiveData() {
         return groceriesListLiveData;
     }
 
