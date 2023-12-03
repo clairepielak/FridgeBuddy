@@ -1,21 +1,20 @@
 package com.example.fridgebuddy.ui.ShoppingList;
 
-// Groceries.java
-public class ShoppingListViewModel {
-    private String title;
-    private int quantity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-    public ShoppingListViewModel(String title, int quantity) {
-        this.title = title;
-        this.quantity = quantity;
+import java.util.List;
+
+public class ShoppingListViewModel extends ViewModel {
+    private MutableLiveData<List<Groceries>> groceriesListLiveData = new MutableLiveData<>();
+
+    public LiveData<List<Groceries>> getGroceriesListLiveData() {
+        return groceriesListLiveData;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public void setGroceriesList(List<Groceries> groceriesList) {
+        groceriesListLiveData.setValue(groceriesList);
     }
 }
 

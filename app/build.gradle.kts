@@ -78,6 +78,7 @@ dependencies {
 
     // -SM
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("com.google.code.gson:gson:2.9.0")
 
     // Dependencies for barcode scanning
     // -ZL
