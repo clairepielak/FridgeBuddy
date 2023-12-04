@@ -2,6 +2,7 @@ package com.example.fridgebuddy.ui.ShoppingList;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,9 @@ import java.util.Map;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.GroceriesViewHolder> {
 
-    private List<ShoppingListViewModel> items = new ArrayList<>();
+    private List<Groceries> items = new ArrayList<>();
 
-    public void setItems(List<ShoppingListViewModel> items) {
+    public void setItems(List<Groceries> items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -37,7 +38,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
 
     @Override
     public void onBindViewHolder(@NonNull GroceriesViewHolder holder, int position) {
-        ShoppingListViewModel shoppingListViewModel = items.get(position);
+        Groceries shoppingListViewModel = items.get(position);
         holder.bind(shoppingListViewModel);
     }
 
@@ -46,13 +47,18 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
         return items != null ? items.size() : 0;
     }
 
+    public void updateItemQuantity(int position, int newQuantity) {
+        if (position >= 0 && position < items.size()) {
+            items.get(position).setQuantity(newQuantity);
+            notifyItemChanged(position);
+        }
+    }
+
     public class GroceriesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
         private NumberPicker quantityTextView;
         private Button rmItemButton;
-        private Handler mHandler;
-        private ShoppingListFragment fragment;
 
         public GroceriesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,42 +73,28 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
             rmItemButton.setOnClickListener(v -> {
                 int clickedPosition = getAdapterPosition();
                 if (clickedPosition != RecyclerView.NO_POSITION) {
-                    fragment.removeItem(clickedPosition);
+                    removeItem(clickedPosition);
+                }
+            });
+
+            quantityTextView.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    int valuePicker = quantityTextView.getValue();
+                    Log.d("Quantity", valuePicker + "");
                 }
             });
         }
 
-        public void bind(ShoppingListViewModel shoppingListViewModel) {
+        public void bind(Groceries shoppingListViewModel) {
             titleTextView.setText(shoppingListViewModel.getTitle());
             quantityTextView.setValue(shoppingListViewModel.getQuantity());
         }
-    }
-    public void saveDataToSharedPreferences(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("shopping_data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        for (ShoppingListViewModel item : items) {
-            editor.putInt(item.getTitle(), item.getQuantity());
+        private void removeItem(int position) {
+            if (position >= 0 && position < items.size()) {
+                items.remove(position);
+                notifyItemRemoved(position);
+            }
         }
-
-        editor.apply();
-    }
-
-    public void loadDataFromSharedPreferences(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("shopping_data", Context.MODE_PRIVATE);
-
-        Map<String, ?> allEntries = preferences.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            String title = entry.getKey();
-            int quantity = preferences.getInt(title, 1);
-            ShoppingListViewModel item = new ShoppingListViewModel(title, quantity);
-            items.add(item);
-        }
-        notifyDataSetChanged();
-    }
-
-    public boolean isSharedPreferencesEmpty(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("shopping_data",Context.MODE_PRIVATE);
-        return preferences.getAll().isEmpty();
     }
 }
