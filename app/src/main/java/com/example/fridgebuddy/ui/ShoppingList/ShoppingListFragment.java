@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -126,11 +125,14 @@ public class ShoppingListFragment extends Fragment {
         super.onDestroyView();
 
         int newPosition = groceriesList.size() - 1;
-        int currentQuantity = quantity.getValue();
-        adapter.updateItemQuantity(newPosition, currentQuantity);
 
-        if (adapter != null) {
-            saveGroceriesList(groceriesList, currentQuantity);
+        if (quantity != null) {
+            int currentQuantity = quantity.getValue();
+            adapter.updateItemQuantity(newPosition, currentQuantity);
+
+            if (adapter != null) {
+                saveGroceriesList(groceriesList, currentQuantity);
+            }
         }
 
         rvShoppingList.setAdapter(null);
