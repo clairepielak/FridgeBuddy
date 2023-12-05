@@ -11,9 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,19 +24,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements ShoppingAdapter.OnQuantityChangeListener {
 
     public List<Groceries> groceriesList;
     private ShoppingAdapter adapter;
-    private NumberPicker quantity;
+    private EditText quantity;
     private EditText newItemEditText;
     private Button addItemButton;
     private Button rmItemButton;
     private RecyclerView rvShoppingList;
+    private int currentQuantity = 1;
 
     private static final String PREF_NAME = "ShoppingListPrefs";
     private static final String KEY_GROCERY_LIST = "groceryList";
-    private static final String KEY_QUANTITY_VALUE = "quantityValue";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -49,6 +47,7 @@ public class ShoppingListFragment extends Fragment {
 
         adapter = new ShoppingAdapter();
         adapter.setItems(groceriesList);
+        adapter.setOnQuantityChangeListener(this);
 
         newItemEditText = view.findViewById(R.id.etList);
         addItemButton = view.findViewById(R.id.newItemButton);
@@ -68,6 +67,15 @@ public class ShoppingListFragment extends Fragment {
         newItemEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 
         return view;
+    }
+
+    public void onQuantityChange(int position, int newQuantity) {
+        if (position >= 0 && position < groceriesList.size()) {
+            Groceries updatedItem = groceriesList.get(position);
+            updatedItem.setQuantity(newQuantity);
+            saveGroceriesList(groceriesList);
+        }
+
     }
 
     private void addItem() {
@@ -100,37 +108,43 @@ public class ShoppingListFragment extends Fragment {
     private List<Groceries> loadGroceriesList() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String json = sharedPreferences.getString(KEY_GROCERY_LIST, "");
-        int quantityValue = sharedPreferences.getInt(KEY_QUANTITY_VALUE,1);
 
         if (!json.isEmpty()) {
-            Type type = new TypeToken<List<Groceries>>() {
-            }.getType();
-            return new Gson().fromJson(json, type);
+            Type type0 = new TypeToken<List<Groceries>>() {}.getType();
+            return new Gson().fromJson(json, type0);
         } else {
             return new ArrayList<>();
         }
     }
 
     // Save the grocery list to SharedPreferences
-    public void saveGroceriesList(List<Groceries> groceriesList, int quantityValue) {
+    public void saveGroceriesList(List<Groceries> groceriesList) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         String json = new Gson().toJson(groceriesList);
         editor.putString(KEY_GROCERY_LIST, json);
-        editor.putInt(KEY_QUANTITY_VALUE, quantityValue);
         editor.apply();
+    }
+    public int getItemQuantity(int position) {
+        if (position >= 0 && position < groceriesList.size()) {
+            return groceriesList.get(position).getQuantity();
+        }
+        return 1; //Return a default value
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
         int newPosition = groceriesList.size() - 1;
-        int currentQuantity = quantity.getValue();
-        adapter.updateItemQuantity(newPosition, currentQuantity);
+        if (adapter != null && adapter.getItemCount() > 0) {
+            int lastItemQuantity = getItemQuantity(newPosition);
+            Groceries lastItem = groceriesList.get(newPosition);
+            lastItem.setQuantity(lastItemQuantity);
+        }
 
         if (adapter != null) {
-            saveGroceriesList(groceriesList, currentQuantity);
+            saveGroceriesList(groceriesList);
         }
 
         rvShoppingList.setAdapter(null);

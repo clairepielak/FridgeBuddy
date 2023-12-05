@@ -1,15 +1,16 @@
 package com.example.fridgebuddy.ui.ShoppingList;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.NumberPicker;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.os.Handler;
+import android.text.Spanned;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,11 +19,17 @@ import com.example.fridgebuddy.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.GroceriesViewHolder> {
 
     private List<Groceries> items = new ArrayList<>();
+    private OnQuantityChangeListener onQuantityChangeListener;
+    public interface OnQuantityChangeListener {
+        void onQuantityChange(int position, int newQuantity);
+    }
+    public void setOnQuantityChangeListener(OnQuantityChangeListener listener) {
+        this.onQuantityChangeListener = listener;
+    }
 
     public void setItems(List<Groceries> items) {
         this.items = items;
@@ -47,17 +54,10 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
         return items != null ? items.size() : 0;
     }
 
-    public void updateItemQuantity(int position, int newQuantity) {
-        if (position >= 0 && position < items.size()) {
-            items.get(position).setQuantity(newQuantity);
-            notifyItemChanged(position);
-        }
-    }
-
     public class GroceriesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
-        private NumberPicker quantityTextView;
+        public EditText quantityEditText;
         private Button rmItemButton;
 
         public GroceriesViewHolder(@NonNull View itemView) {
@@ -65,10 +65,10 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
 
             titleTextView = itemView.findViewById(R.id.tvTitle);
             rmItemButton = itemView.findViewById(R.id.rmButton);
-            quantityTextView = itemView.findViewById(R.id.quantity);
+            quantityEditText = itemView.findViewById(R.id.quantity);
 
-            quantityTextView.setMinValue(1);
-            quantityTextView.setMaxValue(10);
+            int maxQuantity = 99;
+            quantityEditText.setFilters(new InputFilter[]{new InputFilterMinMax(1, maxQuantity)});
 
             rmItemButton.setOnClickListener(v -> {
                 int clickedPosition = getAdapterPosition();
@@ -77,18 +77,63 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Grocer
                 }
             });
 
-            quantityTextView.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            quantityEditText.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                    int valuePicker = quantityTextView.getValue();
-                    Log.d("Quantity", valuePicker + "");
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    //not used
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //not used
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    final String TAG = "msg";
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        if (onQuantityChangeListener != null) {
+                            try {
+                                int newQuantity = Integer.parseInt(s.toString());
+                                onQuantityChangeListener.onQuantityChange(position, newQuantity);
+                            } catch (NumberFormatException e) {
+                                Log.d(TAG, "Invalid number!");
+                            }
+                        }
+                    }
                 }
             });
         }
 
         public void bind(Groceries shoppingListViewModel) {
             titleTextView.setText(shoppingListViewModel.getTitle());
-            quantityTextView.setValue(shoppingListViewModel.getQuantity());
+            quantityEditText.setText(String.valueOf(shoppingListViewModel.getQuantity()));
+        }
+
+        //Class for limiting max value of quantity
+        public class InputFilterMinMax implements InputFilter {
+            private int min, max;
+
+            public InputFilterMinMax(int min, int max) {
+                this.min = min;
+                this.max = max;
+            }
+
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                try {
+                    int input = Integer.parseInt(dest.toString() + source.toString());
+                    if (isInRange(min, max, input))
+                        return null;
+                } catch (NumberFormatException ignored) {
+                }
+                return "";
+            }
+
+            private boolean isInRange(int a, int b, int c) {
+                return b > a ? c >= a && c <= b : c >= b && c <= a;
+            }
         }
         private void removeItem(int position) {
             if (position >= 0 && position < items.size()) {
